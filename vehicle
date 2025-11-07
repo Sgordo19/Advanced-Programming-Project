@@ -1,0 +1,109 @@
+package Project;
+
+import java.util.Scanner;
+
+public class vehicle {
+	Scanner input = new Scanner(System.in);
+	private int vehicle_id;
+	public static int max_weight;
+	public static int max_quantity;
+	public static int current_weight;
+	public static int current_quantity;
+	private boolean v_status;
+	public int getVehicle_id() {
+		return vehicle_id;
+	}
+	public void setVehicle_id(int vehicle_id) {
+		this.vehicle_id = vehicle_id;
+	}
+	public int getMax_weight() {
+		return max_weight;
+	}
+	public void setMax_weight(int max_weight) {
+		this.max_weight = max_weight;
+	}
+	public int getMax_quantity() {
+		return max_quantity;
+	}
+	public void setMax_quantity(int max_quantity) {
+		this.max_quantity = max_quantity;
+	}
+	public int getCurrent_weight() {
+		return current_weight;
+	}
+	public void setCurrent_weight(int current_weight) {
+		this.current_weight = current_weight;
+	}
+	public int getCurrent_quantity() {
+		return current_quantity;
+	}
+	public void setCurrent_quantity(int current_quantity) {
+		this.current_quantity = current_quantity;
+	}
+	public boolean isV_status() {
+		return v_status;
+	}
+	public void setV_status(boolean v_status) {
+		this.v_status = v_status;
+	}
+	
+	public vehicle()
+	{
+		vehicle_id = 0;
+		max_weight = 500;
+		max_quantity = 500;
+		current_weight = 0;
+		current_quantity = 0;
+		v_status = true;
+				
+	}
+	
+	 vehicle( int vehicle_id, int max_weight, int max_quantity, int current_weight, int current_quantity, boolean v_status)
+	{
+		this.vehicle_id = vehicle_id;
+		this.max_weight = max_weight;
+		this.max_quantity = max_quantity;
+		this.current_weight = current_weight;
+		this.current_quantity = current_quantity;
+		this.v_status = v_status;
+	}
+	
+	private vehicle (vehicle obj)
+	{
+		this.vehicle_id = obj.vehicle_id;
+		this.max_weight = obj.max_weight;
+		this.max_quantity = obj.max_quantity;
+		this.current_weight = obj.current_weight;
+		this.current_quantity = obj.current_quantity;
+		this.v_status = obj.v_status;
+	}
+	
+	
+	public static boolean check_capacity(int pweight, int pquantity) {
+
+	   
+	    if (current_weight >= max_weight || current_quantity >= max_quantity) {
+	        System.out.println("Vehicle is full, please choose another");
+	        return false;
+	    }
+
+	 
+	    if ((current_weight + pweight) <= max_weight && 
+	        (current_quantity + pquantity) <= max_quantity) {
+
+	       
+	        current_weight += pweight;
+	        current_quantity += pquantity;
+
+	        System.out.println("Load successfully added");
+	        return true;
+
+	    } else {
+	        System.out.println("The package is too heavy or too many items");
+	        return false;
+	        
+	    }
+
+	}
+}
+
