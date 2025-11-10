@@ -2,14 +2,16 @@ package Project;
 
 import java.util.Scanner;
 
-public class vehicle {
+public class Vehicle {
 	Scanner input = new Scanner(System.in);
 	private int vehicle_id;
-	public static int max_weight;
-	public static int max_quantity;
-	public static int current_weight;
-	public static int current_quantity;
+	private  int max_weight;
+	private int max_quantity;
+	private int current_weight;
+	private int current_quantity;
 	private boolean v_status;
+	
+
 	public int getVehicle_id() {
 		return vehicle_id;
 	}
@@ -47,18 +49,17 @@ public class vehicle {
 		this.v_status = v_status;
 	}
 	
-	public vehicle()
+	public Vehicle()
 	{
 		vehicle_id = 0;
-		max_weight = 500;
-		max_quantity = 500;
+		max_weight = 0;
+		max_quantity = 0;
 		current_weight = 0;
 		current_quantity = 0;
-		v_status = true;
-				
-	}
+		v_status = true;				
+	}	
 	
-	 vehicle( int vehicle_id, int max_weight, int max_quantity, int current_weight, int current_quantity, boolean v_status)
+	 Vehicle( int vehicle_id, int max_weight, int max_quantity, int current_weight, int current_quantity, boolean v_status)
 	{
 		this.vehicle_id = vehicle_id;
 		this.max_weight = max_weight;
@@ -68,7 +69,7 @@ public class vehicle {
 		this.v_status = v_status;
 	}
 	
-	private vehicle (vehicle obj)
+	private Vehicle (Vehicle obj)
 	{
 		this.vehicle_id = obj.vehicle_id;
 		this.max_weight = obj.max_weight;
@@ -79,31 +80,29 @@ public class vehicle {
 	}
 	
 	
-	public static boolean check_capacity(int pweight, int pquantity) {
+	public Vehicle(int vehicle_id, int max_quantity, int max_weight, boolean v_status) {
+		this.vehicle_id = vehicle_id;
+		this.max_weight = max_weight;
+		this.max_quantity = max_quantity;
+		this.v_status = v_status;
+	
+	}
+	public boolean check_capacity(int pweight, int pquantity) {
+	    // Check if the package exceeds the vehicle's limits
+		
 
-	   
-	    if (current_weight >= max_weight || current_quantity >= max_quantity) {
-	        System.out.println("Vehicle is full, please choose another");
+	    if ((current_weight + pweight) > max_weight || 
+	        (current_quantity + pquantity) > max_quantity) {
+	        System.out.println("Vehicle is full or package too heavy, please choose another");
 	        return false;
 	    }
 
-	 
-	    if ((current_weight + pweight) <= max_weight && 
-	        (current_quantity + pquantity) <= max_quantity) {
+	     // If there is space, update current weight and quantity
+	   current_weight += pweight;
+	   current_quantity += pquantity;
 
-	       
-	        current_weight += pweight;
-	        current_quantity += pquantity;
-
-	        System.out.println("Load successfully added");
-	        return true;
-
-	    } else {
-	        System.out.println("The package is too heavy or too many items");
-	        return false;
-	        
-	    }
-
+	    System.out.println("Load successfully added");
+	    return true;
 	}
 }
 
