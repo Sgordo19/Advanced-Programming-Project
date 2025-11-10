@@ -1,0 +1,166 @@
+package Project;
+
+import java.util.Random;
+import java.util.Scanner;
+import java.util.List;
+import java.util.Random;
+
+
+public class Package {
+	
+	static Scanner input = new Scanner(System.in);
+	static Vehicle obj = new Vehicle();
+	
+	private int package_id;
+	private int p_weight;
+	private int p_quantity;
+	private int package_type;
+	private String destination;
+	private boolean p_status;
+	
+	public Package()
+	{
+		package_id = 0;
+		p_weight = 0;
+		p_quantity = 0;
+		destination = "";
+		p_status = false;
+		package_type = 0;
+	}
+	
+	public Package(int package_id, int p_weight,int p_quantity,String destination,boolean p_status, int package_type)
+	{
+		this.package_id = package_id;
+		this.p_weight = p_weight;
+		this.p_quantity = p_quantity;
+		this.destination = destination;
+		this.p_status = p_status;
+		this.package_type = package_type;
+	}
+	
+	public Package(Package obj)
+	{
+		this.package_id = obj.package_id;
+		this.p_weight = obj.p_weight;
+		this.p_quantity = obj.p_quantity;
+		this.destination = obj.destination;
+		this.p_status = obj.p_status;
+		this.package_type = obj.package_type;
+	}
+
+	public Package(int id, String name, float gpa) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getPackage_id() {
+		return package_id;
+	}
+
+	public void setPackage_id(int package_id) {
+		this.package_id = package_id;
+	}
+
+	public int getP_weight() {
+		return p_weight;
+	}
+
+	public void setP_weight(int p_weight) {
+		this.p_weight = p_weight;
+	}
+
+	public int getP_quantity() {
+		return p_quantity;
+	}
+
+	public void setP_quantity(int p_quantity) {
+		this.p_quantity = p_quantity;
+	}
+
+	public int getPackage_type() {
+		return package_type;
+	}
+
+	public void setPackage_type(int package_type) {
+		this.package_type = package_type;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public boolean isP_status() {
+		return p_status;
+	}
+
+	public void setP_status(boolean p_status) {
+		this.p_status = p_status;
+	}
+
+	@Override
+	public String toString() {
+	    return "Package ID: " + package_id +
+	           ", Weight: " + p_weight +
+	           ", Quantity: " + p_quantity +
+	           ", Destination: " + destination +
+	           ", Type: " + package_type +
+	           ", Status: " + p_status;
+	}
+	
+	public static void package_details()
+	{
+		Package_Linkedlist.SinglyLinkedList obj2  = new Package_Linkedlist.SinglyLinkedList();
+		Package obj3 = new Package();
+		
+		Random rand = new Random();
+		
+        int package_id= rand.nextInt(999999) + 1;
+        obj3.setPackage_id(package_id);
+        
+        //(int package_id, int p_weight,int p_quantity,String destination,boolean p_status, int package_type)
+        
+		System.out.println("Please enter package weight: ");
+		int pweight = input.nextInt();
+		obj3.setP_weight(pweight);
+				
+		System.out.println("Please enter the package quantity: ");
+		int pquantity = input.nextInt();
+		obj3.setP_quantity(pquantity);
+				
+		input.nextLine();
+		
+		System.out.println("Please enter your destination: "); /// CASE!
+		String destination = input.nextLine();
+		obj3.setDestination(destination);
+		
+		// input.nextLine();
+		
+		System.out.println("Please enter the package type: "); //// CASE!
+		int package_type = input.nextInt();
+		obj3.setPackage_type(package_type);
+		      
+	
+		
+		obj2.InsertAtBack(package_id, pweight, pquantity, destination, false, package_type);
+		obj2.DisplayList();
+		
+	    
+	    
+	    boolean result = obj.check_capacity(obj3.getP_weight(), obj3.getP_quantity());
+	    
+	    
+	    if (result == false)
+	    {
+	    	System.out.println("Package not added");
+	    }
+	    else
+	    {
+	    	System.out.println("Package added");
+	    }
+	}
+	
+
+}
