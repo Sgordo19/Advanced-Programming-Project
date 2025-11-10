@@ -1,0 +1,46 @@
+package Project;
+
+public class Node {
+    private schedule data;
+    private Node nextNode;
+    private Node prevNode;
+
+    // Constructor that accepts a Schedule object
+    public Node(schedule data) {
+        this.data = data;
+        this.nextNode = null;
+        this.prevNode = null;
+    }
+
+    // Optional: no-arg constructor
+    public Node() {
+        this.data = null;
+        this.nextNode = null;
+        this.prevNode = null;
+    }
+
+    // Getters / setters
+    public schedule getData() {
+        return data;
+    }
+
+    public void setData(schedule data) {
+        this.data = data;
+    }
+
+    public Node getNextNode() {
+        return nextNode;
+    }
+
+    public void setNextNode(Node nextNode) {
+        this.nextNode = nextNode;
+    }
+
+    public Node getPrevNode() {
+        return prevNode;
+    }
+
+    public void setPrevNode(Node prevNode) {
+        this.prevNode = prevNode;
+    }
+}
