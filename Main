@@ -1,1 +1,42 @@
+package Project;
+import java.util.Scanner;
+import java.util.List;
+import java.util.Random;
+
+public class Main {
+	static Vehicle obj = new Vehicle();
+	static Scanner input = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+
+	
+	Package obj2 = new Package();
+	
+	
+	System.out.println("Please enter the vehicle ID: ");
+	obj.setVehicle_id(input.nextInt()); 
+	
+	System.out.println("Please enter the max weight: ");
+	obj.setMax_weight(input.nextInt()); 
+	
+	System.out.println("Please enter the max quantity: ");
+	obj.setMax_quantity(input.nextInt()); 
+	
+
+	boolean v_status = false;	
+	
+	
+	// vehicle obj1 = new vehicle(vehicle_id, max_quantity, max_weight, v_status);
+	
+	obj2.package_details();
+	
+}
+
+	/*public static void add_vehicle_details(int vehicle_id, int max_quantity, int max_weight, boolean v_status)
+	{
+		
+		
+	} */
+}
+
 
