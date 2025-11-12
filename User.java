@@ -1,0 +1,103 @@
+package smartship;
+
+public abstract class User 
+{
+	protected int userID;
+	protected String firstName;
+	protected String lastName;
+	protected String email;
+	protected String password;
+	protected String role;
+	
+		
+	// Primary Constructor
+	public User(int userID, String firstName, String lastName, String email, String password, String role)
+	{
+		this.userID = userID;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+	}
+	
+	 //Getters and Setters
+
+	public int getUserID() 
+	{
+		return userID;
+	}
+
+	public void setUserID(int userID) 
+	{
+		this.userID = userID;
+	}
+
+	public String getFirstName() 
+	{
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() 
+	{
+		return lastName;
+	}
+
+	public void setLastName(String lastName) 
+	{
+		this.lastName = lastName;
+	}
+
+	public String getEmail() 
+	{
+		return email;
+	}
+
+	public void setEmail(String email) 
+	{
+		this.email = email;
+	}
+
+	public String getPassword() 
+	{
+		return password;
+	}
+
+	public void setPassword(String password) 
+	{
+		this.password = password;
+	}
+
+	public String getRole() 
+	{
+		return role;
+	}
+
+	public void setRole(String role) 
+	{
+		this.role = role;
+	}
+	
+	
+	public void login()
+	{
+		System.out.println(firstName+ "" +lastName + "logged in as" + role);
+	}
+	
+	public void logout()
+	{
+		System.out.println(firstName+ "" +lastName + "logged out" + role);
+	}
+	
+	public void updateProfile(String newEmail, String newPassword)
+	{
+		this.email = newEmail;
+		this.password = newPassword;
+	}
+	
+	public abstract void viewDasboard();
+}
