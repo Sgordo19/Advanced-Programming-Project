@@ -56,6 +56,8 @@ public class Customer extends User
 		this.shipments = shipments;
 	}
 	
+	// Functional Methods 
+	
 	public void createShipment(String shipmentDetails)
 	{
 		shipments.add(shipmentDetails);
@@ -79,9 +81,11 @@ public class Customer extends User
 	
 	
 	@Override
-	public void viewDasboard() 
+	public void viewDashboard() 
 	{
-		System.out.println("Customer Dashboard - View Shipments, Invoices, and Tracking Info.");
+		ViewDashboard dashboard = new ViewDashboard();
+		dashboard.displayCustomerDashboard(this);
+		
 	}
 		
 
