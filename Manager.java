@@ -9,6 +9,7 @@ public class Manager extends User
 	private List<String> managedVehicles;
 	private List<String> reports;
 	
+	// Primary Constructor
 	public Manager(int userID, String firstName, String lastName, String email, String password)
 	{
 		super(userID, firstName, lastName, email, password, "Manager");
@@ -48,41 +49,34 @@ public class Manager extends User
 		this.reports = reports;
 	}
 	
-	
-	public void generateReport(String type, String dateRange) 
-	{
+	// Functional Methods 
+	public void generateReport(String type, String dateRange)
+    {
         String report = "Generated " + type + " report for " + dateRange;
         reports.add(report);
         System.out.println(report);
     }
-	
-	public void viewVehicleUtilization() 
-	{
+
+    public void viewVehicleUtilization()
+    {
         System.out.println("Displaying vehicle utilization report for all vehicles...");
     }
-	
-	public void manageUserAccounts() 
-	{
+
+    public void manageUserAccounts()
+    {
         System.out.println("Managing user accounts...");
-        for (User u : managedUsers) 
+        for (User u : managedUsers)
         {
-            System.out.println("- " + u.getLastName() + " (" + u.getRole() + ")");
+            System.out.println("- " + u.getFirstName() + " " + u.getLastName() + " (" + u.getRole() + ")");
         }
     }
-	
-	public void manageFleet() {
-        System.out.println("Managing vehicle fleet...");
-        for (String vehicle : managedVehicles) {
-            System.out.println("- Vehicle ID: " + vehicle);
-        }
-    }
-	
+    
 	@Override
-	public void viewDasboard() 
+	public void viewDashboard() 
 	{
-		System.out.println("Manager Dashboard - Reports, Fleet Management, and User Oversight.");
+		ViewDashboard dashboard = new ViewDashboard();
+		dashboard.displayManagerDashboard(this);
 		
 	}
 	
- 
 }
