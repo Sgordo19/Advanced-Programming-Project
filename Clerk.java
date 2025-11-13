@@ -7,7 +7,7 @@ public class Clerk extends User
 {
 	private List<String> assignedShipments;
 
-	 
+	// Primary Constructor 
 	public Clerk(int userID, String firstName, String lastName, String email, String password)
 	{
 		super(userID, firstName, lastName, email, password, "Clerk");
@@ -15,6 +15,7 @@ public class Clerk extends User
 	}
 	
 	
+	// Functional Methods 
 	public void processShipmentRequest(String shipmentID)
 	{
 		assignedShipments.add(shipmentID);
@@ -39,9 +40,10 @@ public class Clerk extends User
 	
 	
 	@Override
-	public void viewDasboard() 
+	public void viewDashboard() 
 	{
-		System.out.println("Clerk Dashboard - Manage Shipments, Payments, and Assignments.");
+		ViewDashboard dashboard = new ViewDashboard();
+		dashboard.displayClerkDashboard(this);
 		
 	}
 	
