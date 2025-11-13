@@ -99,5 +99,31 @@ public abstract class User
 		this.password = newPassword;
 	}
 	
-	public abstract void viewDasboard();
+	public void viewDashboard()
+	{
+		ViewDashboard dashboard = new ViewDashboard();
+
+        switch (role.toLowerCase())
+        {
+            case "customer":
+                dashboard.displayCustomerDashboard((Customer) this);
+                break;
+
+            case "clerk":
+                dashboard.displayClerkDashboard((Clerk) this);
+                break;
+
+            case "driver":
+                dashboard.displayDriverDashboard((Driver) this);
+                break;
+
+            case "manager":
+                dashboard.displayManagerDashboard((Manager) this);
+                break;
+
+            default:
+                System.out.println("Unknown role. Dashboard unavailable.");
+                break;
+        }
+	}
 }
