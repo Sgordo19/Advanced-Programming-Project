@@ -1,4 +1,4 @@
-package smartship;
+package Project;
 
 public class ViewDashboard 
 {
