@@ -8,6 +8,7 @@ public class Driver extends User
 	private String assignedVehicle;
 	private List<String> routeList;
 	
+	// Primary Constructor
 	public Driver(int userID, String firstName, String lastName, String email, String password,String assignedVehicle)
 	{
 		super(userID, firstName, lastName, email, password, "Driver");
@@ -36,26 +37,30 @@ public class Driver extends User
 		this.routeList = routeList;
 	}
 	
+	//Functional Methods 
+	
 	public void viewAssignedDeliveries() 
-	{
-		System.out.println("Deliveries for " + firstName + "" + lastName +": " + routeList);
-	}
-	
-	public void updateDeliveries(String shipmentID, String status)
-	{
-		System.out.println("Shipment " + shipmentID + " marked as " + status + " by driver " + firstName+ "" + lastName);;
-	}
-	
-	public void confirmDelivery(String shipmentID) 
-	{
+    {
+        System.out.println("Deliveries for " + firstName + " " + lastName + ": " + routeList);
+    }
+
+    public void updateDeliveries(String shipmentID, String status)
+    {
+        System.out.println( "Shipment " + shipmentID + " marked as " + status + " by driver " + firstName + " " + lastName);
+    }
+
+    public void confirmDelivery(String shipmentID) 
+    {
         System.out.println("Delivery confirmed for shipment: " + shipmentID);
     }
 	
 	@Override
-	public void viewDasboard() 
+	public void viewDashboard() 
 	{
-		System.out.println("Driver Dashboard - View Routes and Update Deliveries.");
+		ViewDashboard dashboard = new ViewDashboard();
+		dashboard.displayDriverDashboard(this);
 		
 	}
 	
 }
+
