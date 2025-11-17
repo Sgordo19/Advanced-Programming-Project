@@ -37,6 +37,16 @@ public class Package {
         this.p_status = p_status;
         this.package_type = package_type;
     }
+    
+    public Package( Package obj)
+    {
+        this.package_id = obj.package_id;
+        this.p_weight = obj.p_weight;
+        this.p_quantity = obj.p_quantity;
+        this.destination = obj.destination;
+        this.p_status = obj.p_status;
+        this.package_type = obj.package_type;
+    }
 
     // ============================
     // Getters and setters
