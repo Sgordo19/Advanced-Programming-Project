@@ -1,4 +1,4 @@
-package Project;
+package smartship;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +53,4 @@ public class Driver extends User
     {
         System.out.println("Delivery confirmed for shipment: " + shipmentID);
     }
-	
-	@Override
-	public void viewDashboard() 
-	{
-		ViewDashboard dashboard = new ViewDashboard();
-		dashboard.displayDriverDashboard(this);
-		
-	}
-	
 }
-
