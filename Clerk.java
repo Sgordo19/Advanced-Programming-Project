@@ -1,4 +1,4 @@
-package Project;
+package smartship;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class Clerk extends User
 		System.out.println("Clerk processed shipment:" + shipmentID);
 	}
 
-	public void assignedShipmentToVehicle(String shipmentID, String vehicleID)
+	public void assignShipmentToVehicle(String shipmentID, String vehicleID)
 	{
 		System.out.println("Shipment" + shipmentID + "assigned to vehicle" + vehicleID);
 	}
@@ -37,15 +37,4 @@ public class Clerk extends User
 	{
 		System.out.println("Processed " + paymentType + " payment for invoice #" + invoiceID);
     }
-	
-	
-	@Override
-	public void viewDashboard() 
-	{
-		ViewDashboard dashboard = new ViewDashboard();
-		dashboard.displayClerkDashboard(this);
-		
-	}
-	
-	
 }
