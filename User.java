@@ -1,4 +1,4 @@
-package Project;
+package smartship;
 
 public abstract class User 
 {
@@ -20,8 +20,8 @@ public abstract class User
 		this.password = password;
 		this.role = role;
 	}
-	
-	 //Getters and Setters
+	 
+	//Getters and Setters
 
 	public int getUserID() 
 	{
@@ -82,15 +82,14 @@ public abstract class User
 		this.role = role;
 	}
 	
-	
-	public void login()
+	// Functional Methods  
+	public boolean checkPassword(String enteredPassword)
 	{
-		System.out.println(firstName+ "" +lastName + "logged in as" + role);
+		return this.password.equals(enteredPassword);
 	}
-	
-	public void logout()
+	public boolean checkLogin(String enteredEmail, String enteredPassword)
 	{
-		System.out.println(firstName+ "" +lastName + "logged out" + role);
+		return this.email.equalsIgnoreCase(enteredEmail) && this.password.equals(enteredPassword);
 	}
 	
 	public void updateProfile(String newEmail, String newPassword)
