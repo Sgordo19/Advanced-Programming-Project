@@ -28,10 +28,18 @@ public class Main {
         // ASSIGN PACKAGE
         // ================
         vehicle.assignPackageWithValidation(pkg, input);
-
-
+        System.out.println("Package ID :" + pkg.getPackage_id());
+        
+        // =====================
+        // vIEW VEHICLE SCHEDULE 
+        // =====================
+            
+        vehicle.check_schedule();
+        // ================
+        // REMOVE PACKAGE
+        // ================
+        vehicle.removePackage();
     }
-
     // Logo 
     public static void displayMS()
     {
