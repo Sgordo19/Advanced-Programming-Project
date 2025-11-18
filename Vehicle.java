@@ -1,241 +1,240 @@
 package Project;
 
+import java.util.Random;
 import java.util.Scanner;
 
-public class Vehicle {
+public class Package {
 
-    Scanner input = new Scanner(System.in);
-    private int vehicle_id;
-    private int max_weight;
-    private int max_quantity;
-    private int current_weight;
-    private int current_quantity;
-    private boolean v_status;
+    private int package_id;
+    private int p_weight;
+    private int p_quantity;
+    private int package_type;
+    private int route;
+    private String destination;
+    private boolean p_status;
 
-    private Schedulequeue queue;  // queue for holding packages
+    private Scanner input = new Scanner(System.in);
 
-    // ------------------- GETTERS & SETTERS -------------------
-    public int getVehicle_id() {
-        return vehicle_id;
-    }
-    public void setVehicle_id(int vehicle_id) {
-        this.vehicle_id = vehicle_id;
-    }
+    // ============================
+    // Constructors
+    // ============================
 
-    public int getMax_weight() {
-        return max_weight;
-    }
-    public void setMax_weight(int max_weight) {
-        this.max_weight = max_weight;
-    }
-
-    public int getMax_quantity() {
-        return max_quantity;
-    }
-    public void setMax_quantity(int max_quantity) {
-        this.max_quantity = max_quantity;
+    public Package() {
+        package_id = 0;
+        p_weight = 0;
+        p_quantity = 0;
+        destination = "";
+        p_status = false;
+        package_type = 0;
+        route = 0;
     }
 
-    public int getCurrent_weight() {
-        return current_weight;
-    }
-    public void setCurrent_weight(int current_weight) {
-        this.current_weight = current_weight;
-    }
+    public Package(int package_id, int p_weight, int p_quantity, int route, String destination,
+                   boolean p_status, int package_type) {
 
-    public int getCurrent_quantity() {
-        return current_quantity;
+        this.package_id = package_id;
+        this.p_weight = p_weight;
+        this.p_quantity = p_quantity;
+        this.route = route;
+        this.destination = destination;
+        this.p_status = p_status;
+        this.package_type = package_type;
     }
-    public void setCurrent_quantity(int current_quantity) {
-        this.current_quantity = current_quantity;
-    }
-
-    public boolean isV_status() {
-        return v_status;
-    }
-    public void setV_status(boolean v_status) {
-        this.v_status = v_status;
-    }
-
-    // ------------------- CONSTRUCTORS -------------------
-    public Vehicle() {
-        vehicle_id = 0;
-        max_weight = 0;
-        max_quantity = 0;
-        current_weight = 0;
-        current_quantity = 0;
-        v_status = true;
-
-        queue = new Schedulequeue();    // initialize queue
+    
+    public Package( Package obj)
+    {
+        this.package_id = obj.package_id;
+        this.p_weight = obj.p_weight;
+        this.p_quantity = obj.p_quantity;
+        this.route =obj.route;
+        this.destination = obj.destination;
+        this.p_status = obj.p_status;
+        this.package_type = obj.package_type;
     }
 
-    Vehicle(int vehicle_id, int max_weight, int max_quantity,
-            int current_weight, int current_quantity, boolean v_status) {
-        this.vehicle_id = vehicle_id;
-        this.max_weight = max_weight;
-        this.max_quantity = max_quantity;
-        this.current_weight = current_weight;
-        this.current_quantity = current_quantity;
-        this.v_status = v_status;
+    // ============================
+    // Getters and setters
+    // ============================
 
-        queue = new Schedulequeue();
+    public int getRoute() {
+		return route;
+	}
+
+	public void setRoute(int route) {
+		this.route = route;
+	}
+
+	public int getPackage_id() {
+        return package_id;
     }
 
-    private Vehicle(Vehicle obj) {
-        this.vehicle_id = obj.vehicle_id;
-        this.max_weight = obj.max_weight;
-        this.max_quantity = obj.max_quantity;
-        this.current_weight = obj.current_weight;
-        this.current_quantity = obj.current_quantity;
-        this.v_status = obj.v_status;
-
-        queue = new Schedulequeue();
+    public void setPackage_id(int package_id) {
+        this.package_id = package_id;
     }
 
-    public Vehicle(int vehicle_id, int max_quantity, int max_weight, boolean v_status) {
-        this.vehicle_id = vehicle_id;
-        this.max_weight = max_weight;
-        this.max_quantity = max_quantity;
-        this.v_status = v_status;
-
-        this.current_weight = 0;
-        this.current_quantity = 0;
-
-        queue = new Schedulequeue();
+    public int getP_weight() {
+        return p_weight;
     }
 
-    // ------------------- VALIDATION HELPERS -------------------
-    private int getValidatedPositiveInt(String message) {
-        int value;
+    public void setP_weight(int p_weight) {
+        this.p_weight = p_weight;
+    }
+
+    public int getP_quantity() {
+        return p_quantity;
+    }
+
+    public void setP_quantity(int p_quantity) {
+        this.p_quantity = p_quantity;
+    }
+
+    public int getPackage_type() {
+        return package_type;
+    }
+
+    public void setPackage_type(int package_type) {
+        this.package_type = package_type;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public boolean isP_status() {
+        return p_status;
+    }
+
+    public void setP_status(boolean p_status) {
+        this.p_status = p_status;
+    }
+
+
+    // Display package info
+    @Override
+    public String toString() {
+        return "Package ID: " + package_id +
+               ", Weight: " + p_weight +
+               ", Quantity: " + p_quantity +
+               ", Route: " + route +
+               ", Destination: " + destination +
+               ", Type: " + package_type +
+               ", Status: " + p_status;
+    }
+
+    // Input methods
+    public void readPackageDetails() {
+
+        Random rand = new Random();
+        setPackage_id(rand.nextInt(999999) + 1);
+
+        // Package Weight
+        int weigh;
         do {
-            System.out.println(message);
+            System.out.println("Enter package weight (positive integer): ");
             while (!input.hasNextInt()) {
                 System.out.println("Invalid input! Enter a positive integer.");
                 input.next();
             }
-            value = input.nextInt();
-        } while (value <= 0);
-        return value;
-    }
+            weigh = input.nextInt();
+        } while (weigh <= 0);
+        setP_weight(weigh);
 
-    // ------------------- VEHICLE DETAILS INPUT -------------------
-    public void inputVehicleDetails() {
-        this.vehicle_id     = getValidatedPositiveInt("Please enter the vehicle ID: ");
-        this.max_weight     = getValidatedPositiveInt("Please enter the max weight: ");
-        this.max_quantity   = getValidatedPositiveInt("Please enter the max quantity: ");
-        this.v_status       = true;
-    }
-    
-
-
-
-    // ------------------- CAPACITY CHECK -------------------
-    public boolean check_capacity(int pweight, int pquantity) {
-
-        int weight_result = current_weight + pweight;
-        int quantity_result = current_quantity + pquantity;
-
-        if (weight_result <= max_weight && quantity_result <= max_quantity) {
-            System.out.println("Load successfully added");
-
-            current_weight += pweight;
-            current_quantity += pquantity;
-
-            return true;
-        } else {
-            System.out.println("Vehicle is full or package too heavy, please choose another");
-            return false;
-        }
-    }
-
-    // ------------------- ASSIGN PACKAGE TO VEHICLE -------------------
-    public void assignPackage(Package pkg) {
-
-        if (check_capacity(pkg.getP_weight(), pkg.getP_quantity())) {
-            queue.Enqueue(pkg);
-            System.out.println("Package " + pkg.getPackage_id() +
-                               " assigned to Vehicle " + vehicle_id);
-        } else {
-            System.out.println("Cannot assign package due to capacity.");
-        }
-    }
-
-    // ------------------- REMOVE PACKAGE FROM QUEUE -------------------
-    public Package removePackage() {
-
-        if (queue.isEmpty()) {
-            System.out.println("No packages to remove.");
-            return null;
-        }
-
-        Scanner input = new Scanner(System.in);
-
-        System.out.print("Enter the Package ID to remove: ");
-        int idToRemove = input.nextInt();
-
-        Schedulequeue temp = new Schedulequeue();
-        Package removed = null;
-        Package pack = queue.Dequeue();
-
-        // Search through the queue
-        while (!queue.isEmpty()) {
-            
-            
-
-            if (pack.getPackage_id() == idToRemove) {
-                removed = pack;
-                current_weight -= pack.getP_weight();
-                current_quantity -= pack.getP_quantity();
-            } else {
-                temp.Enqueue(pack);
+        // Package Quantity
+        int quan;
+        do {
+            System.out.println("Enter package quantity (positive integer): ");
+            while (!input.hasNextInt()) {
+                System.out.println("Invalid input! Enter a positive integer.");
+                input.next();
             }
-        }
+            quan = input.nextInt();
+        } while (quan <= 0);
+        setP_quantity(quan);
 
-        // Restore remaining packages back into the original queue
-        while (!temp.isEmpty()) {
-            queue.Enqueue(temp.Dequeue());
-        }
+        input.nextLine(); // clear buffer
+        
+        // Route
+        int rout = 0;
 
-        if (removed != null) {
-            System.out.println("Package " + idToRemove +
-                               " removed from Vehicle " + vehicle_id);
-            pack.setP_status(false);
-            
-        } else {
-            System.out.println("Package ID " + idToRemove +
-                               " was not found on this vehicle.");
-        }
+        do {
+            System.out.println("Enter package route: 1 - 4");
 
-        return removed;
+            while (!input.hasNextInt()) {  
+                System.out.println("Invalid input! Enter an integer from 1 to 4.");
+                input.next(); // discard invalid input
+            }
+
+            rout = input.nextInt();
+
+            if (rout < 1 || rout > 4) {
+                System.out.println("Route must be between 1 and 4!");
+            }
+
+        } while (rout < 1 || rout > 4);
+
+        setRoute(rout);
+        input.nextLine();  // clear buffer
+        
+        // Destination
+        String dest;
+        do {
+            System.out.println("Enter destination: ");
+            dest = input.nextLine().trim();
+            if (dest.isEmpty())
+                System.out.println("Destination cannot be empty.");
+        } while (dest.isEmpty());
+        setDestination(dest);
+
+        // Package Type
+        choosePackageType();
     }
 
-    public void assignPackageWithValidation(Package pkg, Scanner input) {
+    // ============================
+    // Package type menu
+    // ============================
 
-        System.out.println("\nEnter vehicle ID to assign the package: ");
-        int selectedId = input.nextInt();
+    public void choosePackageType() {
 
-        if (selectedId == this.vehicle_id) {
-            pkg.assignToVehicle(this);
-            System.out.println("Package assigned successfully!");
-        } else {
-            System.out.println("Vehicle ID not found. Package NOT assigned.");
+        System.out.println("Package Types:");
+        System.out.println("1. Document");
+        System.out.println("2. Small");
+        System.out.println("3. Medium");
+        System.out.println("4. Large");
+        System.out.println("5. Fragile");
+
+        int type;
+        do {
+            System.out.println("Enter type (1–5): ");
+            while (!input.hasNextInt()) {
+                System.out.println("Invalid input. Enter a number (1–5).");
+                input.next();
+            }
+            type = input.nextInt();
+
+            if (type < 1 || type > 5)
+                System.out.println("Invalid type. Try again.");
+        } while (type < 1 || type > 5);
+
+        setPackage_type(type);
+    }
+
+    // Assign to vehicle
+    public boolean assignToVehicle(Vehicle veh) {
+
+        if (veh.check_capacity(getP_weight(), getP_quantity())) {
+            veh.assignPackage(this);
+            System.out.println("Package " + package_id + " assigned to Vehicle " + veh.getVehicle_id());
+            setP_status(true);
+            return true;
         }
 
-        System.out.println("\n--- FINAL VEHICLE STATUS ---");
-        System.out.println(this);
+        System.out.println("Package could NOT be assigned. Vehicle is full.");
+        return false;
+        
+        
     }
-    
-    public boolean check_schedule() {
-        if (queue.isEmpty()) {
-            System.out.println("No packages scheduled for this vehicle.");
-            return false;
-        }
-
-        System.out.println("\n--- VEHICLE " + vehicle_id + " SCHEDULED PACKAGES ---");
-
-        queue.displayQueue();   //allows Schedulequeue handle printing
-
-        return true;
-    }
-
 }
