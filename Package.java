@@ -9,7 +9,7 @@ public class Package {
     private int p_weight;
     private int p_quantity;
     private int package_type;
-    private int route;
+    private int zone;
     private String destination;
     private boolean p_status;
 
@@ -26,16 +26,16 @@ public class Package {
         destination = "";
         p_status = false;
         package_type = 0;
-        route = 0;
+        zone = 0;
     }
 
-    public Package(int package_id, int p_weight, int p_quantity, int route, String destination,
+    public Package(int package_id, int p_weight, int p_quantity, int zone, String destination,
                    boolean p_status, int package_type) {
 
         this.package_id = package_id;
         this.p_weight = p_weight;
         this.p_quantity = p_quantity;
-        this.route = route;
+        this.zone = zone;
         this.destination = destination;
         this.p_status = p_status;
         this.package_type = package_type;
@@ -46,7 +46,7 @@ public class Package {
         this.package_id = obj.package_id;
         this.p_weight = obj.p_weight;
         this.p_quantity = obj.p_quantity;
-        this.route =obj.route;
+        this.zone =obj.zone;
         this.destination = obj.destination;
         this.p_status = obj.p_status;
         this.package_type = obj.package_type;
@@ -56,12 +56,12 @@ public class Package {
     // Getters and setters
     // ============================
 
-    public int getRoute() {
-		return route;
+    public int getZone() {
+		return zone;
 	}
 
-	public void setRoute(int route) {
-		this.route = route;
+	public void setZone(int zone) {
+		this.zone= zone;
 	}
 
 	public int getPackage_id() {
@@ -119,7 +119,7 @@ public class Package {
         return "Package ID: " + package_id +
                ", Weight: " + p_weight +
                ", Quantity: " + p_quantity +
-               ", Route: " + route +
+               ", Zone: " + zone +
                ", Destination: " + destination +
                ", Type: " + package_type +
                ", Status: " + p_status;
@@ -158,25 +158,25 @@ public class Package {
         input.nextLine(); // clear buffer
         
         // Route
-        int rout = 0;
+        int zon = 0;
 
         do {
-            System.out.println("Enter package route: 1 - 4");
+            System.out.println("Enter package Zone: 1 - 4");
 
             while (!input.hasNextInt()) {  
                 System.out.println("Invalid input! Enter an integer from 1 to 4.");
                 input.next(); // discard invalid input
             }
 
-            rout = input.nextInt();
+            zon = input.nextInt();
 
-            if (rout < 1 || rout > 4) {
+            if (zon < 1 || zon > 4) {
                 System.out.println("Route must be between 1 and 4!");
             }
 
-        } while (rout < 1 || rout > 4);
+        } while (zon < 1 || zon > 4);
 
-        setRoute(rout);
+        setZone(zon);
         input.nextLine();  // clear buffer
         
         // Destination
