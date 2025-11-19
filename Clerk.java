@@ -1,4 +1,4 @@
-package smartship;
+package Project;
 
 import java.util.ArrayList;
 import java.util.List;
