@@ -16,10 +16,10 @@ public class PackageNode {
         }
 
 
-        public Node(int package_id, int p_weight,int p_quantity,String destination,boolean p_status, int package_type)
+        public Node(int package_id, int p_weight,int p_quantity,int zone, String destination,boolean p_status, int package_type)
     	
         { 
-            data = new Package(package_id, p_weight,p_quantity,destination,p_status, package_type);
+            data = new Package(package_id, p_weight,p_quantity,zone, destination,p_status, package_type);
           nextNode = null; 
         } 
          
