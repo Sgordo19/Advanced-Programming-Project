@@ -17,7 +17,7 @@ public class ShipmentDAO {
             INSERT INTO shipment (
                 tracking_seq,
                 tracking_number,
-                sender_id,
+                CID,
                 recipient_name,
                 recipient_address,
                 recipient_phone,
@@ -45,13 +45,13 @@ public class ShipmentDAO {
 
             
            // Sender
-            ps.setString(3, s.getSender().getCID());
+            ps.setInt(3, s.getSender().getUserID());
             
 
             // Recipient
             ps.setString(4, s.getRecipient().getName() != null ? s.getRecipient().getName() : "");
             ps.setString(5, s.getRecipient().getAddress().getAddress() != null ? s.getRecipient().getAddress().getAddress() : "");
-            ps.setString(6, s.getRecipient().getPhone() != null ? s.getRecipient().getPhone() : "");
+            ps.setString(6, s.getRecipient().getPhoneNumber() != null ? s.getRecipient().getPhoneNumber() : "");
 
             // Package
             ps.setDouble(7, s.getPkg().getWeight());

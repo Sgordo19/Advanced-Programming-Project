@@ -20,13 +20,13 @@ public class CustomerDAO {
             
             while (rs.next()) {
                 Customer customer = new Customer();
-                customer.setCID(rs.getString("CID"));
+                customer.setUserID(Integer.parseInt(rs.getString("CID")));
                 customer.setName(rs.getString("firstName") + " " + rs.getString("lastName"));
                 customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phoneNumber"));
+                customer.setPhoneNumber(rs.getString("phoneNumber"));
                 
                 // Create address
-                Destination address = new Destination();
+                Address address = new Address();
                 address.setAddress(rs.getString("address"));
                 customer.setAddress(address);
                 
@@ -51,12 +51,12 @@ public class CustomerDAO {
             
             if (rs.next()) {
                 Customer customer = new Customer();
-                customer.setCID(rs.getString("CID"));
+                customer.setUserID(Integer.parseInt(rs.getString("CID")));
                 customer.setName(rs.getString("firstName") + " " + rs.getString("lastName"));
                 customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phoneNumber"));
+                customer.setPhoneNumber(rs.getString("phoneNumber"));
                 
-                Destination address = new Destination();
+                Address address = new Address();
                 address.setAddress(rs.getString("address"));
                 customer.setAddress(address);
                 

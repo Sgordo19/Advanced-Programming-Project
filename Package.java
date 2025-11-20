@@ -1,240 +1,70 @@
-package Project;
-
-import java.util.Random;
-import java.util.Scanner;
+package ga;
 
 public class Package {
-
-    private int package_id;
-    private int p_weight;
-    private int p_quantity;
-    private int package_type;
-    private int route;
-    private String destination;
-    private boolean p_status;
-
-    private Scanner input = new Scanner(System.in);
-
-    // ============================
-    // Constructors
-    // ============================
+    private double weight;
+    private double length;
+    private double width;
+    private double height;
+    private Address destination;
 
     public Package() {
-        package_id = 0;
-        p_weight = 0;
-        p_quantity = 0;
-        destination = "";
-        p_status = false;
-        package_type = 0;
-        route = 0;
+        this.weight = 0.0;
+        this.length = 0.0;
+        this.width = 0.0;
+        this.height = 0.0;
+        this.destination = new Address();
     }
 
-    public Package(int package_id, int p_weight, int p_quantity, int route, String destination,
-                   boolean p_status, int package_type) {
-
-        this.package_id = package_id;
-        this.p_weight = p_weight;
-        this.p_quantity = p_quantity;
-        this.route = route;
+    public Package(double weight, double length, double width, double height, Address destination) {
+        this.weight = weight;
+        this.length = length;
+        this.width = width;
+        this.height = height;
         this.destination = destination;
-        this.p_status = p_status;
-        this.package_type = package_type;
-    }
-    
-    public Package( Package obj)
-    {
-        this.package_id = obj.package_id;
-        this.p_weight = obj.p_weight;
-        this.p_quantity = obj.p_quantity;
-        this.route =obj.route;
-        this.destination = obj.destination;
-        this.p_status = obj.p_status;
-        this.package_type = obj.package_type;
     }
 
-    // ============================
-    // Getters and setters
-    // ============================
-
-    public int getRoute() {
-		return route;
-	}
-
-	public void setRoute(int route) {
-		this.route = route;
-	}
-
-	public int getPackage_id() {
-        return package_id;
+    public double getWeight() {
+        return weight;
     }
 
-    public void setPackage_id(int package_id) {
-        this.package_id = package_id;
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
-    public int getP_weight() {
-        return p_weight;
+    public double getLength() {
+        return length;
     }
 
-    public void setP_weight(int p_weight) {
-        this.p_weight = p_weight;
+    public void setLength(double length) {
+        this.length = length;
     }
 
-    public int getP_quantity() {
-        return p_quantity;
+    public double getWidth() {
+        return width;
     }
 
-    public void setP_quantity(int p_quantity) {
-        this.p_quantity = p_quantity;
+    public void setWidth(double width) {
+        this.width = width;
     }
 
-    public int getPackage_type() {
-        return package_type;
+    public double getHeight() {
+        return height;
     }
 
-    public void setPackage_type(int package_type) {
-        this.package_type = package_type;
+    public void setHeight(double height) {
+        this.height = height;
     }
 
-    public String getDestination() {
+    public Address getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(Address destination) {
         this.destination = destination;
     }
 
-    public boolean isP_status() {
-        return p_status;
-    }
-
-    public void setP_status(boolean p_status) {
-        this.p_status = p_status;
-    }
-
-
-    // Display package info
     @Override
     public String toString() {
-        return "Package ID: " + package_id +
-               ", Weight: " + p_weight +
-               ", Quantity: " + p_quantity +
-               ", Route: " + route +
-               ", Destination: " + destination +
-               ", Type: " + package_type +
-               ", Status: " + p_status;
-    }
-
-    // Input methods
-    public void readPackageDetails() {
-
-        Random rand = new Random();
-        setPackage_id(rand.nextInt(999999) + 1);
-
-        // Package Weight
-        int weigh;
-        do {
-            System.out.println("Enter package weight (positive integer): ");
-            while (!input.hasNextInt()) {
-                System.out.println("Invalid input! Enter a positive integer.");
-                input.next();
-            }
-            weigh = input.nextInt();
-        } while (weigh <= 0);
-        setP_weight(weigh);
-
-        // Package Quantity
-        int quan;
-        do {
-            System.out.println("Enter package quantity (positive integer): ");
-            while (!input.hasNextInt()) {
-                System.out.println("Invalid input! Enter a positive integer.");
-                input.next();
-            }
-            quan = input.nextInt();
-        } while (quan <= 0);
-        setP_quantity(quan);
-
-        input.nextLine(); // clear buffer
-        
-        // Route
-        int rout = 0;
-
-        do {
-            System.out.println("Enter package route: 1 - 4");
-
-            while (!input.hasNextInt()) {  
-                System.out.println("Invalid input! Enter an integer from 1 to 4.");
-                input.next(); // discard invalid input
-            }
-
-            rout = input.nextInt();
-
-            if (rout < 1 || rout > 4) {
-                System.out.println("Route must be between 1 and 4!");
-            }
-
-        } while (rout < 1 || rout > 4);
-
-        setRoute(rout);
-        input.nextLine();  // clear buffer
-        
-        // Destination
-        String dest;
-        do {
-            System.out.println("Enter destination: ");
-            dest = input.nextLine().trim();
-            if (dest.isEmpty())
-                System.out.println("Destination cannot be empty.");
-        } while (dest.isEmpty());
-        setDestination(dest);
-
-        // Package Type
-        choosePackageType();
-    }
-
-    // ============================
-    // Package type menu
-    // ============================
-
-    public void choosePackageType() {
-
-        System.out.println("Package Types:");
-        System.out.println("1. Document");
-        System.out.println("2. Small");
-        System.out.println("3. Medium");
-        System.out.println("4. Large");
-        System.out.println("5. Fragile");
-
-        int type;
-        do {
-            System.out.println("Enter type (1–5): ");
-            while (!input.hasNextInt()) {
-                System.out.println("Invalid input. Enter a number (1–5).");
-                input.next();
-            }
-            type = input.nextInt();
-
-            if (type < 1 || type > 5)
-                System.out.println("Invalid type. Try again.");
-        } while (type < 1 || type > 5);
-
-        setPackage_type(type);
-    }
-
-    // Assign to vehicle
-    public boolean assignToVehicle(Vehicle veh) {
-
-        if (veh.check_capacity(getP_weight(), getP_quantity())) {
-            veh.assignPackage(this);
-            System.out.println("Package " + package_id + " assigned to Vehicle " + veh.getVehicle_id());
-            setP_status(true);
-            return true;
-        }
-
-        System.out.println("Package could NOT be assigned. Vehicle is full.");
-        return false;
-        
-        
+        return "{Weight=" + weight + "kg, Destination=" + destination + "}";
     }
 }
