@@ -16,6 +16,11 @@ public class Schedulequeue {
     public Node getRear() {
         return Rear;
     }
+ 
+    // Check if the queue is Empty and returns the front of the node
+    public boolean isEmpty() {
+        return Front == null;
+    }
 
     // Add schedule to queue
     public void Enqueue( Package data) {
@@ -65,4 +70,23 @@ public class Schedulequeue {
         }
         return count;
     }
+    
+    public void displayQueue() {
+        if (Front == null) {
+            System.out.println("Queue is empty.");
+            return;
+        }
+
+        Node temp = Front;
+
+        while (temp != null) {
+            Package pkg = temp.getData();
+            System.out.println("Package ID: " + pkg.getPackage_id() +
+                               " | Weight: " + pkg.getP_weight() +
+                               " | Quantity: " + pkg.getP_quantity() +
+                               " | Destination: " + pkg.getDestination());
+            temp = temp.getNextNode();
+        }
+    }
+
 }

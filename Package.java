@@ -9,6 +9,7 @@ public class Package {
     private int p_weight;
     private int p_quantity;
     private int package_type;
+    private int zone;
     private String destination;
     private boolean p_status;
 
@@ -25,24 +26,45 @@ public class Package {
         destination = "";
         p_status = false;
         package_type = 0;
+        zone = 0;
     }
 
-    public Package(int package_id, int p_weight, int p_quantity, String destination,
+    public Package(int package_id, int p_weight, int p_quantity, int zone, String destination,
                    boolean p_status, int package_type) {
 
         this.package_id = package_id;
         this.p_weight = p_weight;
         this.p_quantity = p_quantity;
+        this.zone = zone;
         this.destination = destination;
         this.p_status = p_status;
         this.package_type = package_type;
+    }
+    
+    public Package( Package obj)
+    {
+        this.package_id = obj.package_id;
+        this.p_weight = obj.p_weight;
+        this.p_quantity = obj.p_quantity;
+        this.zone =obj.zone;
+        this.destination = obj.destination;
+        this.p_status = obj.p_status;
+        this.package_type = obj.package_type;
     }
 
     // ============================
     // Getters and setters
     // ============================
 
-    public int getPackage_id() {
+    public int getZone() {
+		return zone;
+	}
+
+	public void setZone(int zone) {
+		this.zone= zone;
+	}
+
+	public int getPackage_id() {
         return package_id;
     }
 
@@ -90,55 +112,73 @@ public class Package {
         this.p_status = p_status;
     }
 
-    // ============================
-    // Display package info
-    // ============================
 
+    // Display package info
     @Override
     public String toString() {
         return "Package ID: " + package_id +
                ", Weight: " + p_weight +
                ", Quantity: " + p_quantity +
+               ", Zone: " + zone +
                ", Destination: " + destination +
                ", Type: " + package_type +
                ", Status: " + p_status;
     }
 
-    // ============================
     // Input methods
-    // ============================
-
     public void readPackageDetails() {
 
         Random rand = new Random();
         setPackage_id(rand.nextInt(999999) + 1);
 
         // Package Weight
-        int w;
+        int weigh;
         do {
             System.out.println("Enter package weight (positive integer): ");
             while (!input.hasNextInt()) {
                 System.out.println("Invalid input! Enter a positive integer.");
                 input.next();
             }
-            w = input.nextInt();
-        } while (w <= 0);
-        setP_weight(w);
+            weigh = input.nextInt();
+        } while (weigh <= 0);
+        setP_weight(weigh);
 
         // Package Quantity
-        int q;
+        int quan;
         do {
             System.out.println("Enter package quantity (positive integer): ");
             while (!input.hasNextInt()) {
                 System.out.println("Invalid input! Enter a positive integer.");
                 input.next();
             }
-            q = input.nextInt();
-        } while (q <= 0);
-        setP_quantity(q);
+            quan = input.nextInt();
+        } while (quan <= 0);
+        setP_quantity(quan);
 
         input.nextLine(); // clear buffer
+        
+        // Route
+        int zon = 0;
 
+        do {
+            System.out.println("Enter package Zone: 1 - 4");
+
+            while (!input.hasNextInt()) {  
+                System.out.println("Invalid input! Enter an integer from 1 to 4.");
+                input.next(); // discard invalid input
+            }
+
+            zon = input.nextInt();
+
+            if (zon < 1 || zon > 4) {
+                System.out.println("Route must be between 1 and 4!");
+            }
+
+        } while (zon < 1 || zon > 4);
+
+        setZone(zon);
+        input.nextLine();  // clear buffer
+        
         // Destination
         String dest;
         do {
@@ -182,19 +222,19 @@ public class Package {
         setPackage_type(type);
     }
 
-    // ============================
     // Assign to vehicle
-    // ============================
+    public boolean assignToVehicle(Vehicle veh) {
 
-    public boolean assignToVehicle(Vehicle v) {
-
-        if (v.check_capacity(getP_weight(), getP_quantity())) {
-            v.assignPackage(this);
-            System.out.println("Package " + package_id + " assigned to Vehicle " + v.getVehicle_id());
+        if (veh.check_capacity(getP_weight(), getP_quantity())) {
+            veh.assignPackage(this);
+            System.out.println("Package " + package_id + " assigned to Vehicle " + veh.getVehicle_id());
+            setP_status(true);
             return true;
         }
 
         System.out.println("Package could NOT be assigned. Vehicle is full.");
         return false;
+        
+        
     }
 }

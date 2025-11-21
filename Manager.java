@@ -1,4 +1,4 @@
-package Project;
+package smartship;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,13 +95,4 @@ public class Manager extends User
             System.out.println("- " + u.getFirstName() + " " + u.getLastName() + " (" + u.getRole() + ")");
         }
     }
-    
-	@Override
-	public void viewDashboard() 
-	{
-		ViewDashboard dashboard = new ViewDashboard();
-		dashboard.displayManagerDashboard(this);
-		
-	}
-	
 }

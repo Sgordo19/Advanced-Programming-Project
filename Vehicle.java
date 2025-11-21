@@ -163,21 +163,52 @@ public class Vehicle {
     // ------------------- REMOVE PACKAGE FROM QUEUE -------------------
     public Package removePackage() {
 
-        Package removed = queue.Dequeue();
+        if (queue.isEmpty()) {
+            System.out.println("No packages to remove.");
+            return null;
+        }
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Enter the Package ID to remove: ");
+        int idToRemove = input.nextInt();
+
+        Schedulequeue temp = new Schedulequeue();
+        Package removed = null;
+        Package pack = queue.Dequeue();
+
+        // Search through the queue
+        while (!queue.isEmpty()) {
+            
+            
+
+            if (pack.getPackage_id() == idToRemove) {
+                removed = pack;
+                current_weight -= pack.getP_weight();
+                current_quantity -= pack.getP_quantity();
+            } else {
+                temp.Enqueue(pack);
+            }
+        }
+
+        // Restore remaining packages back into the original queue
+        while (!temp.isEmpty()) {
+            queue.Enqueue(temp.Dequeue());
+        }
 
         if (removed != null) {
-            System.out.println("Package " + removed.getPackage_id() +
+            System.out.println("Package " + idToRemove +
                                " removed from Vehicle " + vehicle_id);
-
-            current_weight -= removed.getP_weight();
-            current_quantity -= removed.getP_quantity();
-
+            pack.setP_status(false);
+            
         } else {
-            System.out.println("No packages to remove.");
+            System.out.println("Package ID " + idToRemove +
+                               " was not found on this vehicle.");
         }
 
         return removed;
     }
+
     public void assignPackageWithValidation(Package pkg, Scanner input) {
 
         System.out.println("\nEnter vehicle ID to assign the package: ");
@@ -192,6 +223,19 @@ public class Vehicle {
 
         System.out.println("\n--- FINAL VEHICLE STATUS ---");
         System.out.println(this);
+    }
+    
+    public boolean check_schedule() {
+        if (queue.isEmpty()) {
+            System.out.println("No packages scheduled for this vehicle.");
+            return false;
+        }
+
+        System.out.println("\n--- VEHICLE " + vehicle_id + " SCHEDULED PACKAGES ---");
+
+        queue.displayQueue();   //allows Schedulequeue handle printing
+
+        return true;
     }
 
 }

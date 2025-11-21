@@ -66,27 +66,17 @@ public class Customer extends User
 	
 	public void trackShipment(String trackingNumber)
 	{
-		System.out.println(firstName + "" + lastName + "is tracking Shioment:" + trackingNumber);
+		System.out.println(firstName + " " + lastName + " is tracking shipment: " + trackingNumber);
+
 	}
 	
 	public void viewInvoice (int invoiceID)
 	{
-		System.out.println("Viewing invoice #" + invoiceID + "for" + firstName + "" + lastName);
+		System.out.println("Viewing invoice #" + invoiceID + " for " + firstName);
 	}
 	
 	public void makePayment(double amount)
 	{
 		System.out.println(firstName + "" + lastName + "make a payment of $" + amount);
 	}
-	
-	
-	@Override
-	public void viewDashboard() 
-	{
-		ViewDashboard dashboard = new ViewDashboard();
-		dashboard.displayCustomerDashboard(this);
-		
-	}
-		
-
 }
