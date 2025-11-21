@@ -23,23 +23,24 @@ public class Main {
         System.out.println("\n--- PACKAGE CREATION ---");
         pkg.readPackageDetails();       
 
-
-        // ================
+         // ================
         // ASSIGN PACKAGE
-        // ================
+       // ================
         vehicle.assignPackageWithValidation(pkg, input);
         System.out.println("Package ID :" + pkg.getPackage_id());
         
         // =====================
         // vIEW VEHICLE SCHEDULE 
         // =====================
-            
+         
         vehicle.check_schedule();
+        
         // ================
         // REMOVE PACKAGE
         // ================
-        vehicle.removePackage();
+        vehicle.removePackage();    
     }
+
     // Logo 
     public static void displayMS()
     {
