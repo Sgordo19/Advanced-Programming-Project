@@ -3,6 +3,9 @@ package Project;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Date;
+
+
 public class Manager extends User
 {
 	private List<User> managedUsers;
@@ -50,12 +53,34 @@ public class Manager extends User
 	}
 	
 	// Functional Methods 
-	public void generateReport(String type, String dateRange)
-    {
-        String report = "Generated " + type + " report for " + dateRange;
-        reports.add(report);
-        System.out.println(report);
-    }
+
+	// Generate and export report to PDF
+	public void generateAndExportReport(String type, Date from, Date to, String pdfPath) {
+		ReportService service = new ReportService();
+		Report report = null;
+		switch (type.toLowerCase()) {
+			case "shipment":
+				report = service.generateShipmentReport(from, to);
+				break;
+			case "revenue":
+				report = service.generateRevenueReport(from, to);
+				break;
+			case "delivery":
+				report = service.generateDeliveryPerformanceReport(from, to);
+				break;
+			case "vehicle":
+				report = service.generateVehicleUtilizationReport(from, to);
+				break;
+			default:
+				System.out.println("Unknown report type: " + type);
+				return;
+		}
+		if (report != null) {
+			reports.add("Generated " + type + " report for: " + from + " to " + to);
+			report.printReport();
+			report.exportToPDF(pdfPath);
+		}
+	}
 
     public void viewVehicleUtilization()
     {
