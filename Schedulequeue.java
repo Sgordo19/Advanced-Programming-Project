@@ -85,8 +85,30 @@ public class Schedulequeue {
                                " | Weight: " + pkg.getP_weight() +
                                " | Quantity: " + pkg.getP_quantity() +
                                " | Destination: " + pkg.getDestination());
-            temp = temp.getNextNode();
+            temp = temp.getNextNode();	
         }
     }
+        
+     /* public void displaySchedule() {
+        if(Front == null) {
+            System.out.println("The Vehicle has no schedule");
+            return;
+        }
+        Node temp = Front;
+        int package_num = 1;
 
-}
+        while (temp != null) {
+            Package pkg = temp.getData();
+            System.out.println("***  Schedule Details ***");
+            System.out.println("Package Number: " + package_num);
+            System.out.println("Package ID: " + pkg.getPackage_id());
+            System.out.println("Destination: " + pkg.getDestination());
+            System.out.println("--------------------");
+            package_num++;
+            temp = temp.getNextNode(); 
+        }
+    }*/
+
+    }
+
+
