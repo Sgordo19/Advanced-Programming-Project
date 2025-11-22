@@ -56,61 +56,69 @@ public class Package {
     // Getters and setters
     // ============================
 
-    public int getZone() {
+    public int getPackage_id() {
+		return package_id;
+	}
+
+	public void setPackage_id(int package_id) {
+		this.package_id = package_id;
+	}
+
+	public int getP_weight() {
+		return p_weight;
+	}
+
+	public void setP_weight(int p_weight) {
+		this.p_weight = p_weight;
+	}
+
+	public int getP_quantity() {
+		return p_quantity;
+	}
+
+	public void setP_quantity(int p_quantity) {
+		this.p_quantity = p_quantity;
+	}
+
+	public int getPackage_type() {
+		return package_type;
+	}
+
+	public void setPackage_type(int package_type) {
+		this.package_type = package_type;
+	}
+
+	public int getZone() {
 		return zone;
 	}
 
 	public void setZone(int zone) {
-		this.zone= zone;
+		this.zone = zone;
 	}
 
-	public int getPackage_id() {
-        return package_id;
-    }
+	public String getDestination() {
+		return destination;
+	}
 
-    public void setPackage_id(int package_id) {
-        this.package_id = package_id;
-    }
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
 
-    public int getP_weight() {
-        return p_weight;
-    }
+	public boolean isP_status() {
+		return p_status;
+	}
 
-    public void setP_weight(int p_weight) {
-        this.p_weight = p_weight;
-    }
+	public void setP_status(boolean p_status) {
+		this.p_status = p_status;
+	}
 
-    public int getP_quantity() {
-        return p_quantity;
-    }
+	public Scanner getInput() {
+		return input;
+	}
 
-    public void setP_quantity(int p_quantity) {
-        this.p_quantity = p_quantity;
-    }
-
-    public int getPackage_type() {
-        return package_type;
-    }
-
-    public void setPackage_type(int package_type) {
-        this.package_type = package_type;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public boolean isP_status() {
-        return p_status;
-    }
-
-    public void setP_status(boolean p_status) {
-        this.p_status = p_status;
-    }
+	public void setInput(Scanner input) {
+		this.input = input;
+	}
 
 
     // Display package info
@@ -125,7 +133,9 @@ public class Package {
                ", Status: " + p_status;
     }
 
-    // Input methods
+
+
+	// Input methods
     public void readPackageDetails() {
 
         Random rand = new Random();
@@ -229,12 +239,26 @@ public class Package {
             veh.assignPackage(this);
             System.out.println("Package " + package_id + " assigned to Vehicle " + veh.getVehicle_id());
             setP_status(true);
+            veh.setV_status(true);
             return true;
         }
 
         System.out.println("Package could NOT be assigned. Vehicle is full.");
         return false;
-        
-        
+               
     }
+    
+    public void mark_delivered( Package pkg)
+    {
+    	if (pkg.isP_status() == false)
+    	{
+    		System.out.println("Package " + pkg.getPackage_id() + " is delivered");
+    	}
+    	else
+    	{
+    		System.out.println("Package " + pkg.getPackage_id() + " is not delivered");
+    	}
+    }
+    
+
 }
