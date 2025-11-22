@@ -53,9 +53,58 @@ public class Customer extends User {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+/*
+// FUNCTIONAL METHODS — Connected to DAO
+     
+    // 1. Create a Shipment (Customer initiates shipment request)
+    public boolean createShipment(Shipment shipment)
+    {
+        this.shipment = shipment;
+		return ShipmentDAO.saveShipment(shipment);
+    }
 
-	// Functional Methods
 
+    // 2. Track Shipment (view status)
+    public void trackShipment(String trackingNumber) 
+    {
+        // Retrieve all shipments for this customer
+        List<Shipment> shipments = ShipmentDAO.getShipmentsByCustomer(String.valueOf(this.getUserID()));
+        boolean found = false;
+
+        // Loop through each shipment and find the one with the matching tracking number
+        for (Shipment s : shipments) {
+            if (s.getTrackingNumber().equalsIgnoreCase(trackingNumber)) {
+                System.out.println("Shipment Status for " + trackingNumber + ": " + s.getStatus());
+                found = true;
+                break;
+            }
+        }
+
+        // If no match was found
+        if (!found) {
+            System.out.println("No shipment found with tracking number: " + trackingNumber);
+        }
+    }
+   
+    // 3. View All Shipments by This Customer
+    public void viewMyShipments()
+    {
+        List<Shipment> shipments = ShipmentDAO.getShipmentsByCustomer(String.valueOf(this.userID));
+
+        System.out.println("\n=== SHIPMENTS FOR " + firstName + " " + lastName + " ===");
+
+        if (shipments.isEmpty())
+        {
+            System.out.println("No shipments found.");
+            return;
+        }
+
+        for (Shipment s : shipments)
+        {
+            System.out.println("Tracking: " + s.getTrackingNumber() +
+                               " | Status: " + s.getStatus());
+        }
+    }*/
 	public void viewInvoice(int invoiceID) {
 		System.out.println("Viewing invoice #" + invoiceID + " for " + firstName);
 	}
