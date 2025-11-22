@@ -134,17 +134,22 @@ public class Vehicle {
 
         int weight_result = current_weight + pweight;
         int quantity_result = current_quantity + pquantity;
+        boolean result;
 
         if (weight_result <= max_weight && quantity_result <= max_quantity) {
             System.out.println("Load successfully added");
 
             current_weight += pweight;
             current_quantity += pquantity;
-
-            return true;
+            result = true;
+            
+           
+            return result;
         } else {
             System.out.println("Vehicle is full or package too heavy, please choose another");
-            return false;
+            result = false;
+            check_availability(result);
+            return result;
         }
     }
 
@@ -162,48 +167,41 @@ public class Vehicle {
 
     // ------------------- REMOVE PACKAGE FROM QUEUE -------------------
     public Package removePackage() {
-
         if (queue.isEmpty()) {
             System.out.println("No packages to remove.");
             return null;
         }
 
         Scanner input = new Scanner(System.in);
-
         System.out.print("Enter the Package ID to remove: ");
         int idToRemove = input.nextInt();
 
         Schedulequeue temp = new Schedulequeue();
         Package removed = null;
-        Package pack = queue.Dequeue();
 
         // Search through the queue
         while (!queue.isEmpty()) {
-            
-            
+            Package pack = queue.Dequeue();  // dequeue inside the loop
 
             if (pack.getPackage_id() == idToRemove) {
                 removed = pack;
                 current_weight -= pack.getP_weight();
                 current_quantity -= pack.getP_quantity();
+                this.setV_status(false);  
             } else {
                 temp.Enqueue(pack);
             }
         }
 
-        // Restore remaining packages back into the original queue
+        // Restore the queue
         while (!temp.isEmpty()) {
             queue.Enqueue(temp.Dequeue());
         }
 
         if (removed != null) {
-            System.out.println("Package " + idToRemove +
-                               " removed from Vehicle " + vehicle_id);
-            pack.setP_status(false);
-            
+            System.out.println("Package ID " + idToRemove + " removed successfully."); /// Need to fixed in database 
         } else {
-            System.out.println("Package ID " + idToRemove +
-                               " was not found on this vehicle.");
+            System.out.println("Package ID " + idToRemove + " was not found on this vehicle.");
         }
 
         return removed;
@@ -237,5 +235,15 @@ public class Vehicle {
 
         return true;
     }
+    
+    public void check_availability( boolean result)
+    {
+    	if(result == false)
+    	{
+    		setV_status(false);
+    	}
+    }
+    
+
 
 }
