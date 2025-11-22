@@ -1,202 +1,115 @@
 package Project;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class UserDAO 
-{
+public class UserDAO {
+	private static final String URL = "jdbc:mysql://localhost:3306/test_ap";
+    private static final String USER = "root";
+    private static final String PASS = "";
+    
+	public static boolean saveUser(User u) {
+	    
 
-    // LOGIN: Authenticate
-    public User authenticate(String email, String password) 
-    {
-        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+	    String sql = """
+	        INSERT INTO users (
+	            user_seq,
+	            user_id,
+	            first_name,
+	            last_name,
+	            email,
+	            password,
+	            role,
+	            address,
+	            phone_number
+	        ) VALUES (?,?,?,?,?,?,?,?,?)
+	    """;
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) 
-        {
+	    try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	    	
+	    	int seq =  User.getNextUserSequence();
+	    	String role = u.getRole();
+	        ps.setInt(1, seq);
+	        	
+	        // Full user ID stored in User object
+	        ps.setString(2, User.generateUserID(seq, role));
 
-            ps.setString(1, email);
-            ps.setString(2, password);
+	        ps.setString(3, u.getFirstName() != null ? u.getFirstName() : "");
+	        ps.setString(4, u.getLastName() != null ? u.getLastName() : "");
+	        ps.setString(5, u.getEmail() != null ? u.getEmail() : "");
+	        ps.setString(6, u.getPassword() != null ? u.getPassword() : "");
+	        ps.setString(7, u.getRole() != null ? u.getRole() : "");
+	        ps.setString(8, u.getAddress() != null ? u.getAddress().toString() : "");
+	        ps.setString(9, u.getPhoneNumber() != null ? u.getPhoneNumber() : "");
 
-            try (ResultSet rs = ps.executeQuery()) 
-            {
-                if (rs.next()) 
-                {
-                    return mapRowToUser(rs);
-                }
-            }
+	        int rowsAffected = ps.executeUpdate();
+	        System.out.println("User saved: " + u.getUserID() + " | Rows affected: " + rowsAffected);
+	        return rowsAffected > 0;
 
-        } catch (SQLException e) 
-        {
-            System.out.println("Error during authentication: " + e.getMessage());
-        }
-        return null;
-    }
+	    } catch (SQLException ex) {
+	        System.err.println("SQL Error: " + ex.getMessage());
+	        ex.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	// Login method
+	public static User loginUser(String email, String password) {
+	    String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+	    
+	    try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    // PUBLIC SAVE METHODS
-    public void saveCustomer(Customer customer) 
-    { 
-    	saveUser(customer, "Customer"); 
-    }
-    public void saveClerk(Clerk clerk)
-    {
-    	saveUser(clerk, "Clerk"); 
-    }
-    public void saveDriver(Driver driver) 
-    {
-    	saveUser(driver, "Driver"); 
-    }
-    public void saveManager(Manager manager)
-    {
-    	saveUser(manager, "Manager"); 
-    }
+	        ps.setString(1, email);
+	        ps.setString(2, password);
 
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            String role = rs.getString("role");
 
-    // ----------------------------------------
-    //  GENERIC SAVE METHOD FOR ALL USER TYPES
-    // ----------------------------------------
-    private void saveUser(User user, String role)
-    {
+	            User u = new User();
+	            switch (role.toLowerCase()) {
+	                case "customer":
+	                    u = new Customer(); 
+	                    break;
+	                case "manager":
+	                    //u = new Manager();
+	                    break;
+	                case "clerk":
+	                   // u = new Clerk();
+	                    break;
+	                case "driver":
+	                    //u = new Driver();
+	                    break;
+	            }
 
-        String sql = "INSERT INTO users " + "(firstName, lastName, email, password, role, address, phoneNumber, assignedVehicle) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	            // Populate common fields
+	            u.setUserID(rs.getString("user_id"));
+	            u.setFirstName(rs.getString("first_name"));
+	            u.setLastName(rs.getString("last_name"));
+	            u.setEmail(rs.getString("email"));
+	            u.setPassword(rs.getString("password"));
+	            u.setRole(role);
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) 
-        {
+	            Address addr = new Address();
+	            addr.setAddress(rs.getString("address"));
+	            u.setAddress(addr);
 
-            // Common fields
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, role);
+	            u.setPhoneNumber(rs.getString("phone_number"));
 
-            // Address + Phone — only Customer has these
-            if (user instanceof Customer cust) 
-            {
-                ps.setString(6, cust.getAddress());
-                ps.setString(7, cust.getPhoneNumber());
-            } else 
-            {
-                ps.setNull(6, Types.VARCHAR);
-                ps.setNull(7, Types.VARCHAR);
-            }
-
-            // Assigned Vehicle — only Driver has this
-            if (user instanceof Driver drv) 
-            {
-                ps.setString(8, drv.getAssignedVehicle());
-            } else 
-            {
-                ps.setNull(8, Types.VARCHAR);
-            }
-
-            ps.executeUpdate();
-
-            // GET AUTO ID
-            try (ResultSet keys = ps.getGeneratedKeys()) 
-            {
-                if (keys.next())
-                {
-                    user.setUserID(keys.getInt(1));
-                }
-            }
-
-        } catch (SQLException e) 
-        {
-            System.out.println("Error saving " + role + ": " + e.getMessage());
-        }
-    }
-
-
-    // ----------------------------------------
-    //  FIND ALL USERS — MANAGER VIEW
-    // ----------------------------------------
-    public List<User> findAllUsers() 
-    {
-        List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM users";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) 
-        {
-
-            while (rs.next())
-            {
-                User user = mapRowToUser(rs);
-                if (user != null) list.add(user);
-            }
-
-        } catch (SQLException e) 
-        {
-            System.out.println("Error loading users: " + e.getMessage());
-        }
-
-        return list;
-    }
+	            return u;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return null; // login failed
+	}
 
 
-    // ----------------------------------------
-    //  MAP DATABASE ROW → USER SUBCLASS
-    // ----------------------------------------
-    private User mapRowToUser(ResultSet rs) throws SQLException 
-    {
-
-        int userID = rs.getInt("userID");
-        String firstName = rs.getString("firstName");
-        String lastName = rs.getString("lastName");
-        String email = rs.getString("email");
-        String password = rs.getString("password");
-        String role = rs.getString("role");
-
-        String address = safeGet(rs, "address");
-        String phoneNumber = safeGet(rs, "phoneNumber");
-        String assignedVehicle = safeGet(rs, "assignedVehicle");
-
-        if (role == null) role = "";
-
-        return switch (role.toLowerCase()) 
-        		{
-
-            case "customer" -> new Customer(
-                    userID, firstName, lastName, email, password,
-                    address, phoneNumber
-            );
-
-            case "clerk" -> new Clerk(
-                    userID, firstName, lastName, email, password
-            );
-
-            case "driver" -> new Driver(
-                    userID, firstName, lastName, email, password,
-                    assignedVehicle
-            );
-
-            case "manager" -> new Manager(
-                    userID, firstName, lastName, email, password
-            );
-
-            default -> 
-            {
-                System.out.println("Unknown role for userID " + userID + ": " + role);
-                yield null;
-            }
-        };
-    }
 
 
-    // SAFE GETTER
-    private String safeGet(ResultSet rs, String column) 
-    {
-        try 
-        {
-            String value = rs.getString(column);
-            return value != null ? value : "";
-        } catch (SQLException e) 
-        {
-            return "";
-        }
-    }
 }

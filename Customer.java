@@ -1,58 +1,66 @@
 package Project;
 
-public class Customer extends User
-{
-    private String address;
-    private String phoneNumber;
+public class Customer extends User {
+	private Address address;
+	private String phoneNumber;
 
-    // Primary Constructor
-    public Customer(int userID, String firstName, String lastName, String email, String password, String address, String phoneNumber)
-    {
-        super(userID, firstName, lastName, email, password, "Customer");
-        this.address = address;
-        this.phoneNumber = phoneNumber;
+	public Customer() {
+    	super();
+        this.phoneNumber = "";
+        this.address = new Address();
     }
 
-    // Getters and Setters
-    public String getAddress() 
-    {
-        return address;
-    }
 
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
+ 	public Customer (int userID, String firstName, String lastName, String email, String password, String role, String phoneNumber, Address address)
+ 	{
+ 		super();
+ 		this.address = address;
+ 		this.phoneNumber = phoneNumber;
+ 	}
+ 	public String getUserID()
+ 	{
+ 		return userID;
+ 	}
+ 	public void setUserID(String userID)
+ 	{
+ 		this.userID = userID;
+ 	}
+ 	public String getName()
+ 	{
+ 		return firstName + " " + lastName;
+ 	}
+ 	public void setName(String fullName) {
+ 	    String[] parts = fullName.trim().split(" ", 2);
+ 	    this.firstName = parts[0];
+ 	    this.lastName = parts.length > 1 ? parts[1] : "";
+ 	}
 
-    public String getPhoneNumber() 
-    {
-        return phoneNumber;
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public void setPhoneNumber(String phoneNumber) 
-    {
-        this.phoneNumber = phoneNumber;
-    }
 
-    // Functional Methods 
-    public void createShipment(String shipmentDetails)
-    {
-    	// Call ShipmentDAO to create shipment in the database
-        System.out.println("Shipment created for " + firstName + " " + lastName + ": " + shipmentDetails);
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public void trackShipment(String trackingNumber)
-    {
-        System.out.println(firstName + " " + lastName + " is tracking shipment: " + trackingNumber);
-    }
 
-    public void viewInvoice(int invoiceID)
-    {
-        System.out.println("Viewing invoice #" + invoiceID + " for " + firstName);
-    }
+	public Address getAddress() {
+		return address;
+	}
 
-    public void makePayment(double amount)
-    {
-        System.out.println(firstName + " " + lastName + " made a payment of $" + amount);
-    }
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	// Functional Methods
+
+	public void viewInvoice(int invoiceID) {
+		System.out.println("Viewing invoice #" + invoiceID + " for " + firstName);
+	}
+
+	public void makePayment(double amount) {
+		System.out.println(firstName + " " + lastName + " made a payment of $" + amount);
+	}
 }
