@@ -1,4 +1,4 @@
-package ga;
+package Project;
 
 public enum Status {
     PENDING("Pending", "Shipment created but not processed"),
@@ -21,5 +21,14 @@ public enum Status {
     
     public String getDescription() {
         return description;
+    }
+    //convert from string to enum
+    public static Status fromString(String status) {
+        for (Status s : Status.values()) {
+            if (s.displayName.equalsIgnoreCase(status) || s.name().equalsIgnoreCase(status)) {
+                return s;
+            }
+        }
+        return null; // or throw exception if invalid
     }
 }

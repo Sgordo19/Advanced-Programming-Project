@@ -1,7 +1,6 @@
 package Project;
 
 public class Invoice extends ShipmentOrder {
-    private string status;
-
+	private String status;
 
 }

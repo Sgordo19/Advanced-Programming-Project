@@ -1,6 +1,7 @@
-package ga;
+package Project;
 
 import java.sql.*;
+
 
 public class Shipment {
 	public String trackingNumber;
@@ -148,7 +149,7 @@ public class Shipment {
         String user = "root";
         String pass = "";
 
-        String query = "SELECT MAX(tracking_seq) FROM shipment";
+        String query = "SELECT MAX(tracking_seq) FROM shipments";
 
         try (Connection conn = DriverManager.getConnection(url, user, pass);
              PreparedStatement ps = conn.prepareStatement(query);

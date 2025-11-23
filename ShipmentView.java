@@ -1,36 +1,45 @@
-package view;
+package Project;
 
 import java.awt.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.MaskFormatter;
 import javax.swing.event.DocumentEvent;
-import ga.*;
-import ga.Package;
+
 
 public class ShipmentView extends JFrame implements ActionListener {
 
-    // Labels
+	private static final long serialVersionUID = 1L;
+	// Labels
     JLabel tNumber, packageInfo, packageType, cost, status, cDate, dDate;
     JLabel cName, cID, rName, rAdd, rPhone, rZone;
     JLabel pWeight, pLength, pWidth, pHeight;
 
     // Fields
     JTextField txtTNumber, txtPInfo, txtCost, txtStatus, txtCDate, txtDDate;
-    JTextField txtCName, txtCID, txtRName, txtRAdd, txtRPhone;
+    JTextField txtCName, txtCID, txtRName, txtRAdd;
     JTextField txtPWeight, txtPLength, txtPWidth, txtPHeight;
     JComboBox<String> comboType;
     JComboBox<Integer> comboZone;
+    
+    //Phone mask
+    MaskFormatter phoneMask;
+    JFormattedTextField txtRPhone;
 
     JButton saveBtn;
     Shipment s;
-    private Customer currentCustomer;
+    private User currentUser;
+    
 
-    public ShipmentView(Shipment s) {
+    public ShipmentView(Shipment s, Customer loggedInUser) {
         this.s = s;
+        this.currentUser = loggedInUser;
         initializeComponents();
         layoutComponents();
         setWindowProperties();
@@ -62,7 +71,7 @@ public class ShipmentView extends JFrame implements ActionListener {
         rPhone = new JLabel("Recipient Phone:");
         rZone = new JLabel("Recipient Zone:");
         
-        pWeight = new JLabel("Weight (cm):");
+        pWeight = new JLabel("Weight (lbs):");
         pLength = new JLabel("Length (cm):");
         pWidth = new JLabel("Width (cm):");
         pHeight = new JLabel("Height (cm):");
@@ -81,7 +90,7 @@ public class ShipmentView extends JFrame implements ActionListener {
         txtCID = new JTextField();
         txtRName = new JTextField();
         txtRAdd = new JTextField();
-        txtRPhone = new JTextField();
+    
         
         //read-only
         txtTNumber.setEditable(false);
@@ -106,6 +115,15 @@ public class ShipmentView extends JFrame implements ActionListener {
         // Button
         saveBtn = new JButton("Create Shipment");
         saveBtn.addActionListener(this);
+        
+        try {
+            phoneMask = new MaskFormatter("(876)###-####");
+            phoneMask.setPlaceholderCharacter('_');
+            txtRPhone = new JFormattedTextField(phoneMask);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            txtRPhone = new JFormattedTextField();
+        }
     }
 
     private void layoutComponents() {
@@ -117,6 +135,7 @@ public class ShipmentView extends JFrame implements ActionListener {
 
         int row = 0;
 
+        
         // Customer Panel
         JPanel customerPanel = new JPanel(new GridBagLayout());
         customerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
@@ -206,22 +225,54 @@ public class ShipmentView extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    	//Validation
         try {
+        	if (txtRName.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Recipient name is required.");
+                return;
+            }
+        	 String name = txtRName.getText().trim();
+        	 if (!name.matches("^[a-zA-Z'\\- ]+$")) {
+        	    JOptionPane.showMessageDialog(this, "Name can only contain letters, spaces, apostrophes, or hyphens.");
+        	    return;
+        	 }
+             
+             if (txtRAdd.getText().trim().isEmpty()) {
+                 JOptionPane.showMessageDialog(this, "Recipient address is required.");
+                 return;
+             }
+             String phone = txtRPhone.getText();
+
+             if (phone.contains("_")) {
+                 JOptionPane.showMessageDialog(this, "Please enter a complete phone number.");
+                 return;
+             }
+             // Numeric fields for the package
+             if (!isDouble(txtPWeight.getText()) ||
+                 !isDouble(txtPLength.getText()) ||
+                 !isDouble(txtPWidth.getText())  ||
+                 !isDouble(txtPHeight.getText())) 
+             {
+                 JOptionPane.showMessageDialog(this, "Weight, length, width, and height must be valid numbers.");
+                 return;
+             }
+        	
+        	
             Shipment ship = new Shipment();
 
             // Tracking info
             ship.setTrackingNumber(txtTNumber.getText());
             ship.setCreationDate(txtCDate.getText());
             ship.setDeliveryDate(txtDDate.getText());
-            ship.setStatus(ga.Status.PENDING);
+            ship.setStatus(Status.PENDING);
 
             // Sender - Only need CID for sender_id
             Customer sender = new Customer();
-            sender.setCID(txtCID.getText()); // This will be used as sender_id in database
+            sender.setUserID(txtCID.getText()); // This will be used as CID in database
             sender.setName(txtCName.getText());
 
             // We don't need sender address for the database, but keep it for the object
-            Destination senderDest = new Destination();
+            Address senderDest = new Address();
             senderDest.setAddress("N/A");
             senderDest.setZone(Zone.getZoneById((Integer) comboZone.getSelectedItem()));
             sender.setAddress(senderDest);
@@ -230,9 +281,9 @@ public class ShipmentView extends JFrame implements ActionListener {
             // Recipient
             Customer recipient = new Customer();
             recipient.setName(txtRName.getText());
-            recipient.setPhone(txtRPhone.getText());
+            recipient.setPhoneNumber(txtRPhone.getText());
 
-            Destination recDest = new Destination();
+            Address recDest = new Address();
             recDest.setAddress(txtRAdd.getText());
             recDest.setZone(Zone.getZoneById((Integer) comboZone.getSelectedItem()));
             recipient.setAddress(recDest);
@@ -249,7 +300,7 @@ public class ShipmentView extends JFrame implements ActionListener {
 
             // Shipment Type
             String typeStr = (String) comboType.getSelectedItem();
-            ship.setPackageType(ga.Type.fromDescription(typeStr));
+            ship.setPackageType(Project.Type.fromDescription(typeStr));
 
             // distance + cost
             int zoneId = (Integer) comboZone.getSelectedItem();
@@ -272,6 +323,15 @@ public class ShipmentView extends JFrame implements ActionListener {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
             ex.printStackTrace();
+        }
+    }
+    // double validation
+    private boolean isDouble(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
@@ -301,18 +361,14 @@ public class ShipmentView extends JFrame implements ActionListener {
     };
     
     private void autoPopulateCID() {
-        //getting the first customer from database
-        currentCustomer = CustomerDAO.getFirstCustomer();
-        
-        if (currentCustomer != null) {
-            // Populate the CID  and name field
-            txtCID.setText(currentCustomer.getCID());
-            txtCName.setText(currentCustomer.getName());
-            
+        if (currentUser != null) {
+            txtCID.setText(currentUser.getUserID());
+            txtCName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
         } else {
-            System.out.println("No customers found in database");
+            System.out.println("No logged-in customer provided");
         }
     }
+
     
     private void updateCost()
     {

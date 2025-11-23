@@ -1,4 +1,4 @@
-package ga;
+package Project;
 
 public enum Type {
     STANDARD(1.0, "Standard Delivery"),

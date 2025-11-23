@@ -1,4 +1,4 @@
-package ga;
+package Project;
 
 public enum Zone {
     ZONE_1(1, 5.0, "Local Area"),

@@ -1,4 +1,5 @@
-package ga;
+package Project;
+
 
 public class Address {
     private String address;
@@ -32,6 +33,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "{Address='" + address + "', Zone=" + zone + "}";
+        return address + ", " + zone;
     }
 }

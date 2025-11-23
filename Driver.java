@@ -1,56 +1,44 @@
-package smartship;
+package Project;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Driver extends User
-{
-	private String assignedVehicle;
-	private List<String> routeList;
+public class Driver extends User {
+	private String assignedRoute;
 	
+	public Driver()
+	{
+		super();
+		this.assignedRoute = "";
+	}
 	// Primary Constructor
-	public Driver(int userID, String firstName, String lastName, String email, String password,String assignedVehicle)
-	{
-		super(userID, firstName, lastName, email, password, "Driver");
-		this.assignedVehicle = assignedVehicle;
-		this.routeList = new ArrayList<>();
+	public Driver(int userID, String firstName, String lastName, String email, String password,
+			String assignedRoute) {
+		super();
+		this.assignedRoute = assignedRoute;
 	}
 
-	//Getters and Setters
-	public String getAssignedVehicle() 
-	{
-		return assignedVehicle;
+	// Getters and Setters
+	public String getAssignedRoute() {
+		return assignedRoute;
 	}
 
-	public void setAssignedVehicle(String assignedVehicle) 
-	{
-		this.assignedVehicle = assignedVehicle;
+	public void setAssignedRoute(String assignedRoute) {
+		this.assignedRoute = assignedRoute;
 	}
 
-	public List<String> getRouteList() 
-	{
-		return routeList;
+	// Functional Methods
+
+	public void viewAssignedDeliveries() {
+		// Get delivery info from DB system
+		System.out.println("Viewing deliveries assigned to driver: " + firstName + " " + lastName);
 	}
 
-	public void setRouteList(List<String> routeList) 
-	{
-		this.routeList = routeList;
+	public void updateDeliveries(String shipmentID, String status) {
+		// Get shipment info from DB system
+		System.out.println(
+				"Shipment " + shipmentID + " marked as " + status + " by driver " + firstName + " " + lastName);
 	}
-	
-	//Functional Methods 
-	
-	public void viewAssignedDeliveries() 
-    {
-        System.out.println("Deliveries for " + firstName + " " + lastName + ": " + routeList);
-    }
 
-    public void updateDeliveries(String shipmentID, String status)
-    {
-        System.out.println( "Shipment " + shipmentID + " marked as " + status + " by driver " + firstName + " " + lastName);
-    }
-
-    public void confirmDelivery(String shipmentID) 
-    {
-        System.out.println("Delivery confirmed for shipment: " + shipmentID);
-    }
+	public void confirmDelivery(String shipmentID) {
+		// // Get delivery confirmation info from DB system
+		System.out.println("Delivery confirmed for shipment: " + shipmentID);
+	}
 }

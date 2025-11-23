@@ -1,8 +1,9 @@
-package ga;
+package Project;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class CustomerDAO {
     private static final String URL = "jdbc:mysql://localhost:3306/test_ap";
@@ -12,7 +13,7 @@ public class CustomerDAO {
     // Get all customers (for testing - you can select one)
     public static List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
-        String sql = "SELECT CID, firstName, lastName, email, address, phoneNumber FROM customer";
+        String sql = "SELECT user_id, first_name, last_name, email, address, phone_number FROM users";
         
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -20,10 +21,10 @@ public class CustomerDAO {
             
             while (rs.next()) {
                 Customer customer = new Customer();
-                customer.setUserID(Integer.parseInt(rs.getString("CID")));
-                customer.setName(rs.getString("firstName") + " " + rs.getString("lastName"));
+                customer.setUserID(rs.getString("user_id"));
+                customer.setName(rs.getString("first_name") + " " + rs.getString("last_name"));
                 customer.setEmail(rs.getString("email"));
-                customer.setPhoneNumber(rs.getString("phoneNumber"));
+                customer.setPhoneNumber(rs.getString("phone_number"));
                 
                 // Create address
                 Address address = new Address();
@@ -41,7 +42,7 @@ public class CustomerDAO {
 
     // Get customer by CID
     public static Customer getCustomerByCID(String cid) {
-        String sql = "SELECT CID, firstName, lastName, email, address, phoneNumber FROM customer WHERE CID = ?";
+        String sql = "SELECT user_id, first_name, last_name, email, address, phone_number FROM users WHERE user_id = ?";
         
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -51,10 +52,10 @@ public class CustomerDAO {
             
             if (rs.next()) {
                 Customer customer = new Customer();
-                customer.setUserID(Integer.parseInt(rs.getString("CID")));
-                customer.setName(rs.getString("firstName") + " " + rs.getString("lastName"));
+                customer.setUserID(rs.getString("user_id"));
+                customer.setName(rs.getString("first_name") + " " + rs.getString("last_name"));
                 customer.setEmail(rs.getString("email"));
-                customer.setPhoneNumber(rs.getString("phoneNumber"));
+                customer.setPhoneNumber(rs.getString("phone_number"));
                 
                 Address address = new Address();
                 address.setAddress(rs.getString("address"));

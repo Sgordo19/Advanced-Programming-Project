@@ -1,82 +1,66 @@
-package smartship;
+package Project;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Customer extends User
-{
-	private String address;
+public class Customer extends User {
+	private Address address;
 	private String phoneNumber;
-	private List<String> shipments; // To store shipments IDs
-	
-	
-	// Primary Constructor
-	public Customer (int userID, String firstName, String lastName, String email, String password, String address, String phoneNumber)
-	{
-		super(userID, firstName, lastName, email, password, "Customer");
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.shipments = new ArrayList<>();
-	}
+
+	public Customer() {
+    	super();
+        this.phoneNumber = "";
+        this.address = new Address();
+    }
 
 
-	//Getters and Setters
-	public String getAddress() 
-	{
-		return address;
-	}
+ 	public Customer (int userID, String firstName, String lastName, String email, String password, String role, String phoneNumber, Address address)
+ 	{
+ 		super();
+ 		this.address = address;
+ 		this.phoneNumber = phoneNumber;
+ 	}
+ 	public String getUserID()
+ 	{
+ 		return userID;
+ 	}
+ 	public void setUserID(String userID)
+ 	{
+ 		this.userID = userID;
+ 	}
+ 	public String getName()
+ 	{
+ 		return firstName + " " + lastName;
+ 	}
+ 	public void setName(String fullName) {
+ 	    String[] parts = fullName.trim().split(" ", 2);
+ 	    this.firstName = parts[0];
+ 	    this.lastName = parts.length > 1 ? parts[1] : "";
+ 	}
 
-
-	public void setAddress(String address)
-	{
-		this.address = address;
-	}
-
-
-	public String getPhoneNumber() 
-	{
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
 
-	public void setPhoneNumber(String phoneNumber) 
-	{
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
 
-	public List<String> getShipments() 
-	{
-		return shipments;
+	public Address getAddress() {
+		return address;
 	}
 
 
-	public void setShipments(List<String> shipments) 
-	{
-		this.shipments = shipments;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
-	
-	// Functional Methods 
-	
-	public void createShipment(String shipmentDetails)
-	{
-		shipments.add(shipmentDetails);
-		System.out.println("Shipment created for " + firstName + "" + lastName +":" + shipmentDetails);
-	}
-	
-	public void trackShipment(String trackingNumber)
-	{
-		System.out.println(firstName + " " + lastName + " is tracking shipment: " + trackingNumber);
 
-	}
-	
-	public void viewInvoice (int invoiceID)
-	{
+	// Functional Methods
+
+	public void viewInvoice(int invoiceID) {
 		System.out.println("Viewing invoice #" + invoiceID + " for " + firstName);
 	}
-	
-	public void makePayment(double amount)
-	{
-		System.out.println(firstName + "" + lastName + "make a payment of $" + amount);
+
+	public void makePayment(double amount) {
+		System.out.println(firstName + " " + lastName + " made a payment of $" + amount);
 	}
 }
