@@ -82,14 +82,14 @@ public class DriverDashboard extends JFrame {
 
         // Get vehicle info
         if (vehicleId != -1) {
-            Vehicle vehicle = VehicleDAO.getVehicleById(vehicleId);
+            Vehicle vehicle = VehicleDAO.getVehicleByDriverId(driver.getUserID());
             lblVehicleInfo.setText("Vehicle ID: " + vehicle.getVehicle_id() +
                     ", Status: " + vehicle.getV_status() +
                     ", Max Weight: " + vehicle.getMax_weight() +
                     ", Max Packages: " + vehicle.getMax_quantity());
 
             // Get shipments for this vehicle
-            List<Shipment> shipments = ShipmentDAO.getShipmentsByVehicle(vehicleId);
+            List<Shipment> shipments = ShipmentDAO.getShipmentsByVehicle(vehicle.getVehicle_id());
             for (Shipment s : shipments) {
                 Status shipmentStatus = s.getStatus();
                 if (shipmentStatus == Status.ASSIGNED || shipmentStatus == Status.IN_TRANSIT) {

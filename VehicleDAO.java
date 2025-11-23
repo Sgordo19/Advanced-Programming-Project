@@ -21,8 +21,10 @@ public class VehicleDAO {
             while (rs.next()) {
                 Vehicle v = new Vehicle();
                 v.setVehicle_id(rs.getInt("vehicle_id"));
-                v.setDriver_id(rs.getString("driver_id")); // VARCHAR
+                v.setDriver_id(rs.getString("driver_id")); 
                 v.setV_status(rs.getString("status"));
+                v.setMax_quantity(rs.getInt("max_package_capacity"));
+                v.setMax_weight(rs.getInt("max_weight_capacity"));
                 vehicles.add(v);
             }
         } catch (SQLException e) {
@@ -46,6 +48,8 @@ public class VehicleDAO {
                 v.setVehicle_id(rs.getInt("vehicle_id"));
                 v.setDriver_id(rs.getString("driver_id"));
                 v.setV_status(rs.getString("status"));
+                v.setMax_quantity(rs.getInt("max_package_capacity"));
+                v.setMax_weight(rs.getInt("max_weight_capacity"));
                 return v;
             }
 
@@ -100,6 +104,8 @@ public class VehicleDAO {
                 v.setVehicle_id(rs.getInt("vehicle_id"));
                 v.setDriver_id(rs.getString("driver_id"));
                 v.setV_status(rs.getString("status"));
+                v.setMax_quantity(rs.getInt("max_package_capacity"));
+                v.setMax_weight(rs.getInt("max_weight_capacity"));
                 return v;
             }
 

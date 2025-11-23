@@ -86,7 +86,7 @@ public class ClerkDashboard extends JFrame {
             loadShipments();
 
             // Vehicle table
-            vehicleModel = new DefaultTableModel(new String[]{"Vehicle ID", "Driver ID", "Status", "Max Weight", "Max Quantity"}, 0);
+            vehicleModel = new DefaultTableModel(new String[]{"Vehicle ID", "Max Weight", "Max Quantity", "Current Weight", "Current Quantity"}, 0);
             vehicleTable = new JTable(vehicleModel);
             loadVehicles();
 
@@ -121,13 +121,18 @@ public class ClerkDashboard extends JFrame {
         private void loadVehicles() {
             vehicleModel.setRowCount(0);
             List<Vehicle> vehicles = VehicleDAO.getAllVehicles();
+
             for (Vehicle v : vehicles) {
+
+                double currentWeight = VehicleDAO.getTotalWeightForVehicle(v.getVehicle_id());
+                int currentQty = VehicleDAO.getTotalQuantityForVehicle(v.getVehicle_id());
+
                 vehicleModel.addRow(new Object[]{
                         v.getVehicle_id(),
-                        v.getDriver_id() != null ? v.getDriver_id() : "None",
-                        v.getV_status(),
                         v.getMax_weight(),
-                        v.getMax_quantity()
+                        v.getMax_quantity(),
+                        currentWeight,
+                        currentQty
                 });
             }
         }
@@ -155,6 +160,11 @@ public class ClerkDashboard extends JFrame {
                 JOptionPane.showMessageDialog(this, "Vehicle not found.");
                 return;
             }
+            if (shipment.getStatus() == Status.ASSIGNED) {
+                JOptionPane.showMessageDialog(this,
+                    "This shipment is already assigned to a vehicle.\nUse the Unassign button first.");
+                return;
+            }
 
             // Check capacity using the DAO helper
             if (!ShipmentDAO.canAssignShipmentToVehicle(shipment, vehicle)) {
@@ -167,6 +177,7 @@ public class ClerkDashboard extends JFrame {
             if (success) {
                 JOptionPane.showMessageDialog(this, "Shipment assigned/reassigned successfully!");
                 loadShipments();
+                loadVehicles(); 
             } else {
                 JOptionPane.showMessageDialog(this, "Assignment failed. Database error.");
             }
@@ -174,6 +185,7 @@ public class ClerkDashboard extends JFrame {
 
         private void unassignShipment() {
             int shipmentRow = shipmentTable.getSelectedRow();
+
             if (shipmentRow == -1) {
                 JOptionPane.showMessageDialog(this, "Select a shipment to unassign.");
                 return;
@@ -187,14 +199,22 @@ public class ClerkDashboard extends JFrame {
                 return;
             }
 
-            boolean success = ShipmentDAO.assignVehicleToShipment(trackingNumber, 0); // unassign
+            if (!shipment.getStatus().equals(Status.ASSIGNED)) {
+                JOptionPane.showMessageDialog(this, "Only ASSIGNED shipments can be unassigned.");
+                return;
+            }
+
+            boolean success = ShipmentDAO.assignVehicleToShipment(trackingNumber, 0);
+
             if (success) {
                 JOptionPane.showMessageDialog(this, "Shipment unassigned successfully!");
                 loadShipments();
+                loadVehicles();  // ⬅ IMPORTANT: Refresh vehicle totals
             } else {
                 JOptionPane.showMessageDialog(this, "Unassignment failed.");
             }
         }
+
     }
 
     // Assign Vehicles → Routes

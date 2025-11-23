@@ -66,6 +66,8 @@ public class ReportGUI extends JFrame {
 		generateBtn.setFont(new Font("Arial", Font.BOLD, 15));
 		generateBtn.addActionListener(e -> generateReport());
 		content.add(generateBtn, BorderLayout.SOUTH);
+		
+		setVisible(true);
 	}
 
 	private void selectFilePath() {
@@ -91,7 +93,7 @@ public class ReportGUI extends JFrame {
 			}
 
 			// Call your Manager’s backend logic
-			manager.generateAndExportReport(type, from, to, pdfPath);
+			//manager.generateAndExportReport(type, from, to, pdfPath);
 
 			// Show preview
 			outputArea.append("Generated " + type + " Report\n");

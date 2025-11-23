@@ -90,12 +90,12 @@ public class Vehicle {
             totalQuantity += 1;
         }
 
-        if (totalWeight > max_weight) {
+        if (totalWeight >= max_weight) {
             System.out.println("Cannot add shipment: weight exceeds vehicle max capacity.");
             return false;
         }
 
-        if (totalQuantity > max_quantity) {
+        if (totalQuantity >= max_quantity) {
             System.out.println("Cannot add shipment: quantity exceeds vehicle max capacity.");
             return false;
         }

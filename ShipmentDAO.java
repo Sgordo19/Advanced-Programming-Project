@@ -108,19 +108,18 @@ public class ShipmentDAO {
     }
     // Assign vehicle to shipment
     public static boolean assignVehicleToShipment(String trackingNumber, int vehicleId) {
-        String sqlUpdate;
-        Status newStatus;
+        String sql;
 
-        if (vehicleId == 0) { // unassign
-            sqlUpdate = "UPDATE shipments SET assigned_vehicle = NULL, status = 'PENDING' WHERE tracking_number = ?";
-            newStatus = Status.PENDING;
+        if (vehicleId == 0) {
+            // UNASSIGN shipment
+            sql = "UPDATE shipments SET assigned_vehicle = NULL, status = 'PENDING' WHERE tracking_number = ?";
         } else {
-            sqlUpdate = "UPDATE shipments SET assigned_vehicle = ?, status = 'ASSIGNED' WHERE tracking_number = ?";
-            newStatus = Status.ASSIGNED;
+            // ASSIGN shipment
+            sql = "UPDATE shipments SET assigned_vehicle = ?, status = 'ASSIGNED' WHERE tracking_number = ?";
         }
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement ps = conn.prepareStatement(sqlUpdate)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             if (vehicleId == 0) {
                 ps.setString(1, trackingNumber);
@@ -129,23 +128,20 @@ public class ShipmentDAO {
                 ps.setString(2, trackingNumber);
             }
 
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                System.out.println("Shipment " + trackingNumber + " updated to vehicle " + vehicleId);
-                return true;
-            }
+            return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
+
 
 
     
     public static List<Shipment> getPendingShipments() {
         List<Shipment> shipments = new ArrayList<>();
-        String sql = "SELECT * FROM shipments WHERE status = 'PENDING' OR assigned_vehicle IS NULL";
+        String sql = "SELECT * FROM shipments";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -155,29 +151,17 @@ public class ShipmentDAO {
                 Shipment s = new Shipment();
                 s.setTrackingNumber(rs.getString("tracking_number"));
 
-                // Set shipment status
+                // Status
                 try {
                     s.setStatus(Status.valueOf(rs.getString("status")));
                 } catch (Exception e) {
                     s.setStatus(Status.PENDING);
                 }
 
-                // Optional: load minimal package info
+                // Load minimal weight
                 Package pkg = new Package();
                 pkg.setWeight(rs.getDouble("weight"));
-                pkg.setLength(rs.getDouble("length"));
-                pkg.setWidth(rs.getDouble("width"));
-                pkg.setHeight(rs.getDouble("height"));
                 s.setPkg(pkg);
-
-                // Optional: load sender/recipient names
-                Customer sender = new Customer();
-                sender.setUserID(rs.getString("userID"));
-                s.setSender(sender);
-
-                Customer recipient = new Customer();
-                recipient.setName(rs.getString("recipient_name"));
-                s.setRecipient(recipient);
 
                 shipments.add(s);
             }
@@ -188,6 +172,7 @@ public class ShipmentDAO {
 
         return shipments;
     }
+
  
     // Fetch shipment by tracking number
     public static Shipment getShipmentByTrackingNumber(String trackingNumber) {
@@ -234,6 +219,7 @@ public class ShipmentDAO {
                 s.setCost(rs.getDouble("cost"));
                 s.setCreationDate(rs.getString("creation_date"));
                 s.setDeliveryDate(rs.getString("delivery_date"));
+                s.setAssignedVehicleId(rs.getInt("assigned_vehicle"));
                 return s;
             }
 
@@ -300,16 +286,21 @@ public class ShipmentDAO {
     }
 
     public static boolean canAssignShipmentToVehicle(Shipment s, Vehicle v) {
+        int currentAssignedVehicle = s.getAssignedVehicleId();
+
         double currentWeight = VehicleDAO.getTotalWeightForVehicle(v.getVehicle_id());
-        int currentQuantity = VehicleDAO.getTotalQuantityForVehicle(v.getVehicle_id());
+        int currentQty = VehicleDAO.getTotalQuantityForVehicle(v.getVehicle_id());
+
+        // If shipment already belongs to this vehicle → no capacity issue
+        if (currentAssignedVehicle == v.getVehicle_id()) {
+            return true;
+        }
 
         double newTotalWeight = currentWeight + s.getPkg().getWeight();
-        int newTotalQuantity = currentQuantity + 1;
+        int newTotalQty = currentQty + 1;
 
-        if (newTotalWeight > v.getMax_weight() || newTotalQuantity > v.getMax_quantity()) {
-            return false;
-        }
-        return true;
+        return newTotalWeight <= v.getMax_weight() &&
+               newTotalQty <= v.getMax_quantity();
     }
 
 

@@ -3,6 +3,11 @@ package Project;
 import java.sql.Date;
 
 public class Manager extends User {
+	
+	public Manager()
+	{
+		super();
+	}
 	// Primary Constructor
 	public Manager(int userID, String firstName, String lastName, String email, String password) {
 		super();

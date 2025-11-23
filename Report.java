@@ -97,13 +97,13 @@ public class Report {
 		document.addPage(page);
 		try {
 			PDPageContentStream contentStream = new PDPageContentStream(document, page);
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 18);
+			//contentStream.setFont(PDType1Font.HELVETICA_BOLD, 18);
 			contentStream.beginText();
 			contentStream.newLineAtOffset(50, 770);
 			contentStream.showText("REPORT #" + report_id);
 			contentStream.endText();
 
-			contentStream.setFont(PDType1Font.HELVETICA, 12);
+			//contentStream.setFont(PDType1Font.HELVETICA, 12);
 			int y = 740;
 			contentStream.beginText();
 			contentStream.newLineAtOffset(50, y);

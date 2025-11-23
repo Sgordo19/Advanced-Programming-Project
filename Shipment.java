@@ -14,6 +14,7 @@ public class Shipment {
 	public Status status; 
 	public String creationDate;
 	public String deliveryDate;
+	private int assignedVehicle;
 	private static final String PREFIX = "PKG";
 	
 	
@@ -124,6 +125,14 @@ public class Shipment {
 
     public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
+    }
+    public int getAssignedVehicleId() 
+    { 
+    	return assignedVehicle; 
+    }
+    public void setAssignedVehicleId(int id) 
+    { 
+    	this.assignedVehicle = id; 
     }
 
     //toString() method
