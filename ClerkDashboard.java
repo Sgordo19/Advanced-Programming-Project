@@ -10,7 +10,7 @@ public class ClerkDashboard extends JFrame {
     private static final long serialVersionUID = 1L;
 
     // Buttons
-    private JButton btnAssignShipment, btnAssignVehicle, btnAssignDriver, btnHandlePayments;
+    private JButton btnAssignShipment, btnAssignVehicle, btnAssignDriver, btnHandlePayments,btnBackToLogin;
 
     // Clerk info
     private Clerk clerk;
@@ -28,6 +28,7 @@ public class ClerkDashboard extends JFrame {
         btnAssignDriver.addActionListener(e -> new AssignDriverToVehicleView(clerk));
         btnHandlePayments.addActionListener(e ->
                 JOptionPane.showMessageDialog(this, "Payment handling not implemented yet."));
+        btnBackToLogin.addActionListener(e -> backToLogin());
     }
 
     private void initializeComponents() {
@@ -35,6 +36,7 @@ public class ClerkDashboard extends JFrame {
         btnAssignVehicle = new JButton("Assign Vehicles to Routes");
         btnAssignDriver = new JButton("Assign Drivers to Vehicles");
         btnHandlePayments = new JButton("Handle Payments");
+        btnBackToLogin = new JButton("Back to Login");
     }
 
     private void layoutComponents() {
@@ -52,6 +54,8 @@ public class ClerkDashboard extends JFrame {
         add(btnAssignDriver, gbc);
         gbc.gridy++;
         add(btnHandlePayments, gbc);
+        gbc.gridy++;
+        add(btnBackToLogin, gbc);
     }
 
     private void setWindowProperties() {
@@ -61,6 +65,12 @@ public class ClerkDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);
+    }
+    // Return to login
+    private void backToLogin() 
+    {
+        this.dispose();     
+        new LoginView();    
     }
 
     // ------------------- SUB WINDOWS -------------------
@@ -413,3 +423,4 @@ public class ClerkDashboard extends JFrame {
         }
     }
 }
+
