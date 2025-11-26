@@ -115,6 +115,16 @@ public class ShipmentView extends JFrame implements ActionListener {
         // Button
         saveBtn = new JButton("Create Shipment");
         saveBtn.addActionListener(this);
+
+		backBtn = new JButton("Back to Customer Dashboard");
+        backBtn.addActionListener(e ->
+        {
+        	if(currentUser instanceof Customer)
+        	{
+        		new CustomerDashboard((Customer) currentUser);
+        		this.dispose();
+        	}
+        });
         
         try {
             phoneMask = new MaskFormatter("(876)###-####");
@@ -197,6 +207,14 @@ public class ShipmentView extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(20, 0, 20, 0);
         add(saveBtn, gbc);
+
+		// Back Button
+        gbc.gridy = row++;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 0, 20, 0);
+        add(backBtn, gbc);
     }
 
     private void addLabelField(JPanel panel, JLabel label, JComponent field, int row) {
@@ -385,3 +403,4 @@ public class ShipmentView extends JFrame implements ActionListener {
     	}
     }
 }
+
