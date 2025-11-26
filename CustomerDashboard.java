@@ -10,7 +10,7 @@ public class CustomerDashboard extends JFrame {
     private static final long serialVersionUID = 1L;
 
     // Buttons
-    JButton btnRequestShipment, btnTrackShipments;
+    JButton btnRequestShipment, btnTrackShipments,btnLogout;
 
     // Customer info
     private Customer customer;
@@ -24,11 +24,13 @@ public class CustomerDashboard extends JFrame {
 
         btnRequestShipment.addActionListener(e -> openRequestShipment());
         btnTrackShipments.addActionListener(e -> openTrackShipments());
+        btnLogout.addActionListener(e -> backToLogin());
     }
 
     private void initializeComponents() {
         btnRequestShipment = new JButton("Request Shipment");
         btnTrackShipments = new JButton("Track Shipments");
+        btnLogout = new JButton("Back to Login");
     }
 
     private void layoutComponents() {
@@ -44,6 +46,9 @@ public class CustomerDashboard extends JFrame {
 
         gbc.gridy++;
         add(btnTrackShipments, gbc);
+
+        gbc.gridy++;
+        add(btnLogout, gbc);
     }
 
     private void setWindowProperties() {
@@ -62,6 +67,12 @@ public class CustomerDashboard extends JFrame {
 
     private void openTrackShipments() {
         new TrackShipmentsView(customer);
+    }
+
+    private void backToLogin()
+    {
+    	this.dispose();
+    	new LoginView();
     }
 
     private class TrackShipmentsView extends JFrame {
@@ -97,4 +108,5 @@ public class CustomerDashboard extends JFrame {
         }
     }
 }
+
 
