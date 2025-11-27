@@ -14,7 +14,6 @@ public class Main {
 		Customer c = new Customer();
 		new CustomerDashboard(c);
 		
-		
 		Manager m = new Manager();		
 		new ReportGUI(m);
 		*/
