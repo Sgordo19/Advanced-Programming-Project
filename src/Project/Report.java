@@ -3,6 +3,7 @@ package Project;
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -89,7 +90,7 @@ public ArrayList<T> getEntries() {
 
 public void addEntry(T entry) {
     entries.add(entry);
-    System.out.println("Entry added to Report #" + report_id);
+    //System.out.println("Entry added to Report #" + report_id);
 }
 
 // Print report to console
@@ -105,73 +106,231 @@ public void printReport() {
 }
 
 // Export report to PDF
-public void exportToPDF(String filePath) {
+public void exportToPDF(String filePath) throws Exception {
     PDDocument document = new PDDocument();
     PDPage page = new PDPage(PDRectangle.A4);
     document.addPage(page);
-    try {
-        PDPageContentStream contentStream = new PDPageContentStream(document, page);
-        PDFont font = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
 
-        int y = 770;
+    PDPageContentStream content = new PDPageContentStream(document, page);
+    
+    PDFont boldFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+    PDFont regularFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+    
+    // Title
+    content.setFont(boldFont, 18);
+    content.beginText();
+    content.newLineAtOffset(50, 750);
+    content.showText(type + " Report");
+    content.endText();
 
-        // Report header
-        contentStream.setFont(font, 18);
-        contentStream.beginText();
-        contentStream.newLineAtOffset(50, y);
-        contentStream.showText("REPORT #" + report_id);
-        contentStream.endText();
+    // Date range
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    content.setFont(regularFont, 12);
+    content.beginText();
+    content.newLineAtOffset(50, 730);
+    content.showText("Period: " + sdf.format(date_from) + " to " + sdf.format(date_to));
+    content.endText();
 
-        y -= 30;
-        contentStream.beginText();
-        contentStream.newLineAtOffset(50, y);
-        contentStream.showText("Type: " + type);
-        contentStream.endText();
+    // Generated timestamp
+    content.beginText();
+    content.newLineAtOffset(50, 715);
+    content.showText("Generated: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(generated_at));
+    content.endText();
 
-        y -= 20;
-        contentStream.beginText();
-        contentStream.newLineAtOffset(50, y);
-        contentStream.showText("Generated At: " + generated_at);
-        contentStream.endText();
+    // Separator line
+    content.moveTo(50, 705);
+    content.lineTo(545, 705);
+    content.stroke();
 
-        y -= 20;
-        contentStream.beginText();
-        contentStream.newLineAtOffset(50, y);
-        contentStream.showText("Date Range: " + date_from + " to " + date_to);
-        contentStream.endText();
+    float yPosition = 685;
+    int entryCount = 1;
 
-        // Entries
-        y -= 30;
-        contentStream.beginText();
-        contentStream.newLineAtOffset(50, y);
-        contentStream.showText("Entries:");
-        contentStream.endText();
-
-        for (T entry : entries) {
-            y -= 20;
-            if (y < 50) {
-                break; // prevent overflow
-            }
-            contentStream.beginText();
-            contentStream.newLineAtOffset(70, y);
-            contentStream.showText(entry.toString());
-            contentStream.endText();
+    // Handle different report types
+    for (T entry : entries) {
+        if (entry instanceof Shipment) {
+            // ========== SHIPMENT REPORT ==========
+            yPosition = renderShipmentEntry(content, document, (Shipment) entry, 
+                                           yPosition, entryCount, boldFont, regularFont);
+            entryCount++;
+            
+        } else if (entry instanceof String) {
+            // ========== STRING-BASED REPORTS ==========
+            // (Delivery Performance, Revenue, Vehicle Utilization)
+            yPosition = renderStringEntry(content, document, (String) entry, 
+                                         yPosition, boldFont, regularFont);
         }
-
-        contentStream.close();
-        File file = new File(filePath);
-        file.getParentFile().mkdirs(); // create folders if needed
-        document.save(file);
-       // document.save(new File(filePath));
-        System.out.println("Report exported to PDF: " + filePath);
-
-    } catch (IOException e) {
-        System.err.println("Failed to export report to PDF: " + e.getMessage());
-    } finally {
-        try {
-            document.close();
-        } catch (IOException e) {}
     }
+
+    // Summary footer
+    if (yPosition < 60) {
+        content.close();
+        page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+        content = new PDPageContentStream(document, page);
+        yPosition = 750;
+    }
+
+    content.setFont(boldFont, 11);
+    content.beginText();
+    content.newLineAtOffset(50, yPosition - 10);
+    content.showText("Total Entries: " + entries.size());
+    content.endText();
+
+    content.close();
+    
+    // Ensure parent directory exists
+    File outputFile = new File(filePath);
+    File parentDir = outputFile.getParentFile();
+    if (parentDir != null && !parentDir.exists()) {
+        parentDir.mkdirs();
+    }
+    
+    document.save(outputFile);
+    document.close();
+}
+
+// Helper method to render Shipment entries
+private float renderShipmentEntry(PDPageContentStream content, PDDocument document, 
+                                  Shipment shipment, float yPosition, int entryCount,
+                                  PDFont boldFont, PDFont regularFont) throws Exception {
+    // Check if we need a new page (reserve 130 units for each shipment entry)
+    if (yPosition < 130) {
+        content.close();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+        content = new PDPageContentStream(document, page);
+        yPosition = 750;
+    }
+
+    // Entry number/header
+    content.setFont(boldFont, 11);
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText("Shipment #" + entryCount + " - " + shipment.getTrackingNumber());
+    content.endText();
+    yPosition -= 18;
+
+    // Status and Type
+    content.setFont(regularFont, 10);
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText("Status: " + shipment.getStatus() + 
+                   "  |  Type: " + shipment.getPackageType());
+    content.endText();
+    yPosition -= 15;
+
+    // Sender info
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText("Sender: " + (shipment.getSender() != null ? 
+                   shipment.getSender().getUserID() : "N/A"));
+    content.endText();
+    yPosition -= 15;
+
+    // Recipient info
+    String recipientInfo = "Recipient: ";
+    if (shipment.getRecipient() != null) {
+        recipientInfo += shipment.getRecipient().getName();
+        if (shipment.getRecipient().getPhoneNumber() != null) {
+            recipientInfo += " - " + shipment.getRecipient().getPhoneNumber();
+        }
+    } else {
+        recipientInfo += "N/A";
+    }
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText(recipientInfo);
+    content.endText();
+    yPosition -= 15;
+
+    // Package details
+    String packageInfo = "Package: ";
+    if (shipment.getPkg() != null) {
+        packageInfo += String.format("%.2f kg, %.1fx%.1fx%.1f cm", 
+            shipment.getPkg().getWeight(),
+            shipment.getPkg().getLength(),
+            shipment.getPkg().getWidth(),
+            shipment.getPkg().getHeight());
+    } else {
+        packageInfo += "N/A";
+    }
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText(packageInfo);
+    content.endText();
+    yPosition -= 15;
+
+    // Cost and distance
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText(String.format("Cost: $%.2f  |  Distance: %.2f km", 
+                   shipment.getCost(), shipment.getDistance()));
+    content.endText();
+    yPosition -= 15;
+
+    // Dates
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText("Created: " + shipment.getCreationDate() + 
+                   "  |  Delivered: " + 
+                   (shipment.getDeliveryDate() != null ? 
+                    shipment.getDeliveryDate() : "Pending"));
+    content.endText();
+    yPosition -= 15;
+
+    // Vehicle assignment
+    content.beginText();
+    content.newLineAtOffset(50, yPosition);
+    content.showText("Assigned Vehicle: " + 
+                   (shipment.getAssignedVehicleId() > 0 ? 
+                    "#" + shipment.getAssignedVehicleId() : "Not Assigned"));
+    content.endText();
+    yPosition -= 20;
+
+    // Separator line between entries
+    content.setLineWidth(0.5f);
+    content.moveTo(50, yPosition);
+    content.lineTo(545, yPosition);
+    content.stroke();
+    yPosition -= 15;
+
+    return yPosition;
+}
+
+// Helper method to render String entries (for other report types)
+private float renderStringEntry(PDPageContentStream content, PDDocument document,
+                                String text, float yPosition, 
+                                PDFont boldFont, PDFont regularFont) throws Exception {
+    // Check if we need a new page
+    if (yPosition < 50) {
+        content.close();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+        content = new PDPageContentStream(document, page);
+        yPosition = 750;
+    }
+
+    // Determine if this is a header line (Vehicle #X) or a data line
+    boolean isHeader = text.startsWith("Vehicle #") || 
+                      text.startsWith("Total Shipments:") ||
+                      text.startsWith("Total Revenue:");
+    
+    // Use bold for headers, regular for data
+    content.setFont(isHeader ? boldFont : regularFont, 
+                   isHeader ? 11 : 10);
+    
+    // Indent sub-items (lines starting with spaces)
+    float xOffset = text.startsWith("  ") ? 70 : 50;
+    
+    content.beginText();
+    content.newLineAtOffset(xOffset, yPosition);
+    content.showText(text.trim());
+    content.endText();
+    
+    // Add extra spacing after headers
+    yPosition -= isHeader ? 18 : 15;
+    
+    return yPosition;
 }
 
 }

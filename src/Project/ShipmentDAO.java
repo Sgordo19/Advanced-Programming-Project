@@ -15,6 +15,7 @@ public class ShipmentDAO {
     private static final String PASS = "";
 
     public static boolean saveShipment(Shipment s) {
+    	Invoice i = new Invoice();
         // SQL to match table structure
         String sql = """
             INSERT INTO shipments (
@@ -37,10 +38,18 @@ public class ShipmentDAO {
                 delivery_date
             ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """;
+        
+        String sql2 = """ 
+        			INSERT INTO invoices(
+        			total,
+        			trackingNumber
+        			)VALUES (?,?)
+        		""";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+             PreparedStatement ps = conn.prepareStatement(sql);
+        	 PreparedStatement ps2 = conn.prepareStatement(sql2)){
+        	
             System.out.println("Saving shipment: " + s.getTrackingNumber());
             
             ps.setInt(1, Shipment.getNextTrackingSequence());
@@ -73,10 +82,16 @@ public class ShipmentDAO {
             ps.setString(15, s.getStatus() != null ? s.getStatus().toString() : "");
             ps.setString(16, s.getCreationDate() != null ? s.getCreationDate() : "");
             ps.setString(17, s.getDeliveryDate() != null ? s.getDeliveryDate() : "");
+            
+            //invoice
+            ps2.setDouble(1, i.getTotal());
+            ps2.setString(2, s.getTrackingNumber());
 
             int rowsAffected = ps.executeUpdate();
+            int rowsAffected2 = ps2.executeUpdate();
             System.out.println("Rows affected: " + rowsAffected);
-            return rowsAffected > 0;
+            System.out.println("Rows affected: " + rowsAffected2);
+            return rowsAffected > 0 && rowsAffected2 > 0;
 
         } catch (SQLException ex) {
             System.err.println("SQL Error: " + ex.getMessage());
@@ -234,6 +249,29 @@ public class ShipmentDAO {
         return shipments;
     }
 
+    public static Invoice getInvoiceByTrackingNumber(String trackingNumber)
+    {
+    	String sql = "SELECT * FROM invoices WHERE trackingNumber = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+        		
+        	 ps.setString(1, trackingNumber);
+             ResultSet rs = ps.executeQuery();
+             
+             if (rs.next()) {
+                 Invoice i = new Invoice();
+                 
+                 i.setInvoiceNum(rs.getInt("invoiceNum"));
+                 i.setTrackingNumber(rs.getString("trackingNumber"));
+                 i.setStatus(rs.getString("iStatus"));
+                 i.setTotal(rs.getDouble("total"));
+                 return i;
+             }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	return null;
+    }
  
     // Fetch shipment by tracking number
     public static Shipment getShipmentByTrackingNumber(String trackingNumber) {

@@ -16,7 +16,7 @@ public class Manager extends User {
 	// Functional Methods
 
 	// Generate and export report to PDF
-	public void generateAndExportReport(String type, Date from, Date to, String pdfPath) {
+	public void generateAndExportReport(String type, Date from, Date to, String pdfPath) throws Exception {
 		ReportService service = new ReportService();
 		Report report = null;
 		switch (type.toLowerCase()) {
@@ -30,7 +30,7 @@ public class Manager extends User {
 			report = service.generateDeliveryPerformanceReport(from, to);
 			break;
 		case "vehicle":
-			report = service.generateVehicleUtilizationReport(from, to);
+			report = service.generateVehicleUtilizationReport();
 			break;
 		default:
 			System.out.println("Unknown report type: " + type);

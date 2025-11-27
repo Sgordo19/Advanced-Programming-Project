@@ -4,9 +4,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -87,52 +89,89 @@ public class ReportGUI extends JFrame {
 	
 
 	private void generateReport() {
-		Report<Shipment> r = new Report<>();
-		
 		try {
-			String type = (String) reportTypeCombo.getSelectedItem();
-			String period = (String) timeTypeCombo.getSelectedItem();
-			Date start = parseDate(fromDateField.getText());
-			String pdfPath = pdfPathField.getText();
-			Date today = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String type = (String) reportTypeCombo.getSelectedItem();
+		String period = (String) timeTypeCombo.getSelectedItem();
+		String pdfPath = pdfPathField.getText();
 
+		    if (pdfPath.isEmpty()) {
+		        JOptionPane.showMessageDialog(this, "Please choose a location to save the PDF.");
+		        return;
+		    }
 
-			if (pdfPath.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Please choose a location to save the PDF.");
-				return;
-			}
+		    Date from = parseDate(fromDateField.getText());
+		    Date to = from;
 
-			// Call report
-			if (period.equals("Daily")) 
-			{
-				
-				r.setReport_id(0);
-				r.setDate_from(start);
-				r.setDate_to(start);
-				r.setType(type);
-				r.setGenerated_at(parseDate(sdf.format(today)));
-				List<Shipment> shipments = ShipmentDAO.getShipmentsByDate(start);
-				for (Shipment s : shipments) {
-				    r.addEntry(s);
-				}
-				
-				r.exportToPDF(pdfPath);
-			}
+		    Calendar cal = Calendar.getInstance();
+		    cal.setTime(from);
 
-			// Show preview
-			
-			outputArea.append("Generated " + type + " Report\n");
-			outputArea.append("Time Period:   " + period + "\n");
-			outputArea.append("Start date: " + start + "\n");
-			outputArea.append("Saved PDF: " + pdfPath + "\n\n");
+		    // Adjust 'to' date based on period
+		    switch (period) {
+		        case "Weekly":
+		            cal.add(Calendar.DATE, 6); // 7-day period
+		            to = cal.getTime();
+		            break;
+		        case "Monthly":
+		            cal.add(Calendar.MONTH, 1);
+		            cal.add(Calendar.DATE, -1); // end of month
+		            to = cal.getTime();
+		            break;
+		        default: // Daily
+		            to = from;
+		            break;
+		    }
 
-			JOptionPane.showMessageDialog(this, type + " report generated successfully!");
+		    Report<?> report;
+		    switch (type) {
+		        case "Shipment":
+		            report = ReportService.generateShipmentReport(from, to);
+		            break;
+		        case "Delivery":
+		            report = ReportService.generateDeliveryPerformanceReport(from, to);
+		            break;
+		        case "Revenue":
+		            report = ReportService.generateRevenueReport(from, to);
+		            break;
+		        case "Vehicle":
+		            report = ReportService.generateVehicleUtilizationReport();
+		            break;
+		        default:
+		            JOptionPane.showMessageDialog(this, "Unknown report type selected.");
+		            return;
+		    }
+
+		    report.exportToPDF(pdfPath);
+		   
+
+		    // Show preview in text area
+		    outputArea.append("Generated " + type + " Report\n");
+		    outputArea.append("Time Period: " + period + "\n");
+		    outputArea.append("From: " + from + "\nTo: " + to + "\n");
+		    outputArea.append("Saved PDF: " + pdfPath + "\n\n");
+
+		    JOptionPane.showMessageDialog(this, type + " report generated successfully!");
 
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage());
+		    JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage());
+		    ex.printStackTrace();
 		}
+		
+		clearFields();
 	}
+	
+	private void clearFields() {
+	    // Reset combo boxes to first item
+	    reportTypeCombo.setSelectedIndex(0);
+	    timeTypeCombo.setSelectedIndex(0);
+	    
+	    // Clear text fields
+	    fromDateField.setText("");
+	    pdfPathField.setText("");
+	    
+	    // Clear output area 
+	    outputArea.setText("");
+	}
+
 
 	private Date parseDate(String date) throws ParseException {
 		return new SimpleDateFormat("yyyy-MM-dd").parse(date);
