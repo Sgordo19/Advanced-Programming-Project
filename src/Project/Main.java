@@ -17,8 +17,6 @@ public class Main {
 		
 		Manager m = new Manager();		
 		new ReportGUI(m);
-		
-		
 		*/
 		new LoginView() ;
 		
