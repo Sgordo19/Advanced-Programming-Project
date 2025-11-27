@@ -14,25 +14,25 @@ public class ReportService {
 	}
 
 	public Report generateShipmentReport(Date from, Date to) {
-		Report report = new Report(generateID(), from, to, new ReportType(1, "Shipment Report"));
+		Report report = new Report(generateID(), from, to, new String(1, "Shipment Report"));
 		report.addEntry(new ReportEntry(1, "Total Shipments", rand.nextInt(200)));
 		return report;
 	}
 
 	public Report generateRevenueReport(Date from, Date to) {
-		Report report = new Report(generateID(), from, to, new ReportType(2, "Revenue Report"));
+		Report report = new Report(generateID(), from, to, new String(2, "Revenue Report"));
 		report.addEntry(new ReportEntry(1, "Total Revenue", rand.nextInt(500000)));
 		return report;
 	}
 
 	public Report generateDeliveryPerformanceReport(Date from, Date to) {
-		Report report = new Report(generateID(), from, to, new ReportType(3, "Delivery Performance"));
+		Report report = new Report(generateID(), from, to, new String(3, "Delivery Performance"));
 		report.addEntry(new ReportEntry(1, "On-time Deliveries (%)", rand.nextDouble() * 100));
 		return report;
 	}
 
 	public Report generateVehicleUtilizationReport(Date from, Date to) {
-		Report report = new Report(generateID(), from, to, new ReportType(4, "Vehicle Utilization"));
+		Report report = new Report(generateID(), from, to, new String(4, "Vehicle Utilization"));
 		report.addEntry(new ReportEntry(1, "Average Load (%)", rand.nextDouble() * 100));
 		return report;
 	}

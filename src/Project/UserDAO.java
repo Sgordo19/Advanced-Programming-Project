@@ -79,7 +79,7 @@ public class UserDAO {
 	                    u = new Customer(); 
 	                    break;
 	                case "manager":
-	                    //u = new Manager();
+	                    u = new Manager();
 	                    break;
 	                case "clerk":
 	                    u = new Clerk();

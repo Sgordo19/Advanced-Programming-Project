@@ -6,11 +6,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class ReportGUI extends JFrame {
 
 	private JComboBox<String> reportTypeCombo;
+	private JComboBox<String> timeTypeCombo;
 	private JTextField fromDateField, toDateField, pdfPathField;
 	private JTextArea outputArea;
 	private Manager manager;
@@ -29,23 +32,25 @@ public class ReportGUI extends JFrame {
 		setContentPane(content);
 
 		// ===== TOP PANEL =====
-		JPanel topPanel = new JPanel(new GridLayout(5, 2, 8, 8));
+		JPanel topPanel = new JPanel(new GridLayout(6, 2, 8, 8));
 
 		topPanel.add(new JLabel("Select Report Type:"));
 		reportTypeCombo = new JComboBox<>(new String[] { "Shipment", "Revenue", "Delivery", "Vehicle" });
 		topPanel.add(reportTypeCombo);
+		
+		topPanel.add(new JLabel("Select Report Time Period:"));
+		timeTypeCombo = new JComboBox<>(new String[] { "Daily", "Weekly", "Monthly"});
+		topPanel.add(timeTypeCombo);
 
-		topPanel.add(new JLabel("From Date (yyyy-MM-dd):"));
+		topPanel.add(new JLabel("Start Date (yyyy-MM-dd):"));
 		fromDateField = new JTextField();
 		topPanel.add(fromDateField);
 
-		topPanel.add(new JLabel("To Date (yyyy-MM-dd):"));
-		toDateField = new JTextField();
-		topPanel.add(toDateField);
 
 		topPanel.add(new JLabel("Save PDF As:"));
 		pdfPathField = new JTextField();
 		topPanel.add(pdfPathField);
+		pdfPathField.setEditable(false);
 
 		JButton browseBtn = new JButton("Browse");
 		browseBtn.addActionListener(e -> selectFilePath());
@@ -79,26 +84,47 @@ public class ReportGUI extends JFrame {
 			pdfPathField.setText(chooser.getSelectedFile().getAbsolutePath() + ".pdf");
 		}
 	}
+	
 
 	private void generateReport() {
+		Report<Shipment> r = new Report<>();
+		
 		try {
 			String type = (String) reportTypeCombo.getSelectedItem();
-			Date from = parseDate(fromDateField.getText());
-			Date to = parseDate(toDateField.getText());
+			String period = (String) timeTypeCombo.getSelectedItem();
+			Date start = parseDate(fromDateField.getText());
 			String pdfPath = pdfPathField.getText();
+			Date today = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 
 			if (pdfPath.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Please choose a location to save the PDF.");
 				return;
 			}
 
-			// Call your Manager’s backend logic
-			//manager.generateAndExportReport(type, from, to, pdfPath);
+			// Call report
+			if (period.equals("Daily")) 
+			{
+				
+				r.setReport_id(0);
+				r.setDate_from(start);
+				r.setDate_to(start);
+				r.setType(type);
+				r.setGenerated_at(parseDate(sdf.format(today)));
+				List<Shipment> shipments = ShipmentDAO.getShipmentsByDate(start);
+				for (Shipment s : shipments) {
+				    r.addEntry(s);
+				}
+				
+				r.exportToPDF(pdfPath);
+			}
 
 			// Show preview
+			
 			outputArea.append("Generated " + type + " Report\n");
-			outputArea.append("From: " + from + "\n");
-			outputArea.append("To:   " + to + "\n");
+			outputArea.append("Time Period:   " + period + "\n");
+			outputArea.append("Start date: " + start + "\n");
 			outputArea.append("Saved PDF: " + pdfPath + "\n\n");
 
 			JOptionPane.showMessageDialog(this, type + " report generated successfully!");
@@ -112,9 +138,4 @@ public class ReportGUI extends JFrame {
 		return new SimpleDateFormat("yyyy-MM-dd").parse(date);
 	}
 
-	// For testing GUI alone:
-	public static void main(String[] args) {
-		Manager test = new Manager(1, "John", "Doe", "john@x.com", "pass123");
-		new ReportGUI(test).setVisible(true);
-	}
 }

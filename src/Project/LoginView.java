@@ -88,7 +88,7 @@ public class LoginView extends JFrame {
                     new CustomerDashboard((Customer) loggedInUser); // safe now
                     break;
                 case "manager":
-                   // new ManagerDashboard((Manager) loggedInUser);
+                    new ManagerDashboard((Manager) loggedInUser);
                     break;
                 case "clerk":
                   new ClerkDashboard((Clerk) loggedInUser);

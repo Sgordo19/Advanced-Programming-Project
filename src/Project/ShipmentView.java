@@ -32,7 +32,7 @@ public class ShipmentView extends JFrame implements ActionListener {
     MaskFormatter phoneMask;
     JFormattedTextField txtRPhone;
 
-    JButton saveBtn;
+    JButton saveBtn, backBtn;
     Shipment s;
     private User currentUser;
     

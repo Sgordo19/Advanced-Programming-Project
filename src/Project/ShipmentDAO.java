@@ -1,6 +1,7 @@
 package Project;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -134,6 +135,66 @@ public class ShipmentDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static List<Shipment> getShipmentsByDate(java.util.Date start) {
+        List<Shipment> shipments = new ArrayList<>();
+        String sql = "SELECT * FROM shipments WHERE creation_date = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // Convert java.util.Date -> java.sql.Date
+            java.sql.Date sqlStart = new java.sql.Date(start.getTime());
+            ps.setDate(1, sqlStart);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) { // use while instead of if to get all results
+                Shipment s = new Shipment();
+                s.setTrackingNumber(rs.getString("tracking_number"));
+
+                // Sender
+                Customer sender = new Customer();
+                sender.setUserID(rs.getString("userID"));
+                s.setSender(sender);
+
+                // Recipient
+                Customer recipient = new Customer();
+                recipient.setName(rs.getString("recipient_name"));
+                recipient.setPhoneNumber(rs.getString("recipient_phone"));
+                Address addr = new Address();
+                addr.setAddress(rs.getString("recipient_address"));
+                recipient.setAddress(addr);
+                s.setRecipient(recipient);
+
+                // Package
+                Package pkg = new Package();
+                pkg.setWeight(rs.getDouble("weight"));
+                pkg.setLength(rs.getDouble("length"));
+                pkg.setWidth(rs.getDouble("width"));
+                pkg.setHeight(rs.getDouble("height"));
+                s.setPkg(pkg);
+
+                // Type
+                s.setPackageType(Type.fromDescription(rs.getString("type")));
+
+                // Status
+                s.setStatus(Status.fromString(rs.getString("status")));
+
+                s.setDistance(rs.getDouble("distance"));
+                s.setCost(rs.getDouble("cost"));
+                s.setCreationDate(rs.getString("creation_date"));
+                s.setDeliveryDate(rs.getString("delivery_date"));
+                s.setAssignedVehicleId(rs.getInt("assigned_vehicle"));
+                shipments.add(s);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return shipments;
     }
 
 
