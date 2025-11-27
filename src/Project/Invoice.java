@@ -1,11 +1,14 @@
 package Project;
 
+import java.util.Date;
 
 public class Invoice extends ShipmentOrder {
 	private int invoiceNum;
 	private String status;
 	private double total; 
 	private String trackingNumber;
+	private double balance;
+	private Date created;
 	
 	public Invoice() {
 		super();
@@ -45,6 +48,22 @@ public class Invoice extends ShipmentOrder {
 
 	public void setTrackingNumber(String trackingNumber) {
 		this.trackingNumber = trackingNumber;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 	
 	

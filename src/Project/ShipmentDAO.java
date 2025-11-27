@@ -42,8 +42,10 @@ public class ShipmentDAO {
         String sql2 = """ 
         			INSERT INTO invoices(
         			total,
-        			trackingNumber
-        			)VALUES (?,?)
+        			trackingNumber,
+        			balance,
+        			created
+        			)VALUES (?,?,?,?)
         		""";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -84,8 +86,10 @@ public class ShipmentDAO {
             ps.setString(17, s.getDeliveryDate() != null ? s.getDeliveryDate() : "");
             
             //invoice
-            ps2.setDouble(1, i.getTotal());
+            ps2.setDouble(1, s.getCost());
             ps2.setString(2, s.getTrackingNumber());
+            ps2.setDouble(3, s.getCost());
+            ps2.setString(4, s.getCreationDate() != null ? s.getCreationDate() : "");
 
             int rowsAffected = ps.executeUpdate();
             int rowsAffected2 = ps2.executeUpdate();
