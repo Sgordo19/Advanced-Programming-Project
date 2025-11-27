@@ -54,7 +54,7 @@ public class RouteDAO {
 
                 psCount.setInt(1, vehicleId);
                 ResultSet rs = psCount.executeQuery();
-                if (rs.next() && rs.getInt("route_count") >= 2) {
+                if (rs.next() && rs.getInt("route_count") >= 1) {
                     // Vehicle already assigned to 2 routes
                     return false;
                 }

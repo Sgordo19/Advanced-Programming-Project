@@ -141,7 +141,7 @@ public class ShipmentDAO {
     
     public static List<Shipment> getPendingShipments() {
         List<Shipment> shipments = new ArrayList<>();
-        String sql = "SELECT * FROM shipments";
+        String sql = "SELECT * FROM shipments WHERE status IN ('PENDING', 'ASSIGNED')";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -270,14 +270,24 @@ public class ShipmentDAO {
     }
     //update shipment status
     public static boolean updateShipmentStatus(String trackingNumber, Status newStatus) {
+    	String cDate = java.time.LocalDate.now().toString();
         String sql = "UPDATE shipments SET status = ? WHERE tracking_number = ?";
+        String sql2 = "UPDATE shipments SET actual_delivery_date = ? WHERE tracking_number = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql);
+        	 PreparedStatement ps2 = conn.prepareStatement(sql2)){
 
+        	 // First update - status
             ps.setString(1, newStatus.name()); 
             ps.setString(2, trackingNumber);
+            int rowsAffected1 = ps.executeUpdate();
 
-            return ps.executeUpdate() > 0;
+            // Second update - delivery date
+            ps2.setString(1, cDate);
+            ps2.setString(2, trackingNumber);
+            int rowsAffected2 = ps2.executeUpdate();
+
+            return rowsAffected1 > 0 || rowsAffected2 > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();

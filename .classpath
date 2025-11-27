@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/kenri/OneDrive/Documents/java-jars/pdfbox-app-3.0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kenri/OneDrive/Documents/java-jars/mysql-connector-j-9.5.0/mysql-connector-j-9.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kenri/OneDrive/Documents/java-jars/apache-log4j-2.25.2-bin/log4j-api-2.25.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kenri/OneDrive/Documents/java-jars/apache-log4j-2.25.2-bin/log4j-core-2.25.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
