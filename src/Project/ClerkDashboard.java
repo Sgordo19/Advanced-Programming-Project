@@ -248,7 +248,7 @@ public class ClerkDashboard extends JFrame {
                     "This shipment is already assigned to a vehicle.\nUse the Unassign button first.");
                 return;
             }
-            if(invoice.getStatus().equals("PAID") || invoice.getStatus().equals("PARTIALLY PAID")) {
+            if(invoice.getStatus().equals("NOT PAID") || invoice.getStatus().equals("PARTIALLY PAID")) {
                 JOptionPane.showMessageDialog(this,
                        "This shipment should be paid fully before assignment.");
                    return;
