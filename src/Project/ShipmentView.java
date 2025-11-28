@@ -402,5 +402,16 @@ public class ShipmentView extends JFrame implements ActionListener {
             txtCost.setText("");
     	}
     }
+    
+    public void addBackButton() {
+        JButton btnBack = new JButton("Back");
+        // Add the button to your UI layout
+        // Add action listener:
+        btnBack.addActionListener(e -> {
+            dispose();
+            // Notify parent dashboard to handle navigation
+            // You might need to pass a reference to the dashboard
+        });
+    }
 }
 

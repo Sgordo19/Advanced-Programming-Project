@@ -1,95 +1,79 @@
-
 CREATE DATABASE test_ap;
-
-CREATE TABLE shipments (
-    tracking_seq INT PRIMARY KEY,
-    tracking_number VARCHAR(50) NOT NULL,
-
-    userID VARCHAR(50) NOT NULL,
-
-    recipient_name VARCHAR(100),
-    recipient_address VARCHAR(200),
-    recipient_phone VARCHAR(20),
-
-    weight DECIMAL(10,2),
-    length DECIMAL(10,2),
-    width DECIMAL(10,2),
-    height DECIMAL(10,2),
-
-    type VARCHAR(50),
-    destination_zone INT,
-    distance DECIMAL(10,2),
-    cost DECIMAL(10,2),
-
-    status VARCHAR(50),
-   assigned_vehicle INT NOT NULL,
-    creation_date DATE,
-    delivery_date DATE,
-
-    FOREIGN KEY (userID) REFERENCES users(user_id)
-    FOREIGN KEY (assigned_vehicle) REFERENCES vehicles(vehicle_id)
-);
+USE test_ap;
 
 CREATE TABLE users (
-    user_id VARCHAR(20) PRIMARY KEY,     
-    user_seq INT NOT NULL,               
-    
+    user_id VARCHAR(20) PRIMARY KEY,
+    user_seq INT NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,      
-    
+    password VARCHAR(255) NOT NULL,
     role ENUM('Customer', 'Clerk', 'Driver', 'Manager') NOT NULL,
-    
     address VARCHAR(255),
     phone_number VARCHAR(20),
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE vehicles (
     vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
-    
     max_weight_capacity DECIMAL(10,2) NOT NULL,
     max_package_capacity INT NOT NULL,
-
-    driver_id VARCHAR(20), 
-
-    status ENUM('AVAILABLE', 'IN_USE', 'MAINTENANCE', 'OUT_OF_SERVICE') 
-        DEFAULT 'AVAILABLE',
-
+    driver_id VARCHAR(20),
+    status ENUM('AVAILABLE', 'IN_USE', 'MAINTENANCE', 'OUT_OF_SERVICE') DEFAULT 'AVAILABLE',
     CONSTRAINT fk_vehicle_driver
-        FOREIGN KEY (driver_id)
-        REFERENCES users(user_id)
-        ON UPDATE CASCADE
-        ON DELETE SET NULL
+    FOREIGN KEY (driver_id)
+    REFERENCES users(user_id)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
 );
 
-ALTER TABLE shipments
-ADD CONSTRAINT assigned_vehicle
-FOREIGN KEY (vehicle_id)
-REFERENCES vehicles(vehicle_id)
-ON UPDATE CASCADE
-ON DELETE SET NULL;
+CREATE TABLE shipments (
+    tracking_seq INT PRIMARY KEY,
+    tracking_number VARCHAR(50) NOT NULL,
+    userID VARCHAR(50) NOT NULL,
+    recipient_name VARCHAR(100),
+    recipient_address VARCHAR(200),
+    recipient_phone VARCHAR(20),
+    weight DECIMAL(10,2),
+    length DECIMAL(10,2),
+    width DECIMAL(10,2),
+    height DECIMAL(10,2),
+    type VARCHAR(50),
+    destination_zone INT,
+    distance DECIMAL(10,2),
+    cost DECIMAL(10,2),
+    status VARCHAR(50),
+    assigned_vehicle INT NOT NULL,
+    creation_date DATE,
+    estimated_delivery_date DATE,
+    actual_delivery_date DATE,
+    FOREIGN KEY (userID) REFERENCES users(user_id),
+    FOREIGN KEY (assigned_vehicle) REFERENCES vehicles(vehicle_id) ON UPDATE CASCADE ON DELETE SET NULL
+);
 
 CREATE TABLE routes (
     route_id INT AUTO_INCREMENT PRIMARY KEY,
     route_name VARCHAR(100) NOT NULL,
     start_location VARCHAR(255) NOT NULL,
     end_location VARCHAR(255) NOT NULL,
-
     vehicle_id INT NULL,
     driver_id VARCHAR(20),
-
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
     CONSTRAINT fk_route_vehicle
-        FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id)
-        ON DELETE SET NULL ON UPDATE CASCADE,
-
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_route_driver
-        FOREIGN KEY (driver_id) REFERENCES users(user_id)
-        ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY (driver_id) REFERENCES users(user_id)
+    ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE invoices (
+    invoiceNum INT AUTO_INCREMENT PRIMARY KEY,
+    iStatus ENUM('NOT PAID', 'PAID', 'PARTIALLY PAID') DEFAULT 'NOT PAID',
+    total DECIMAL(10, 2),
+    trackingNumber VARCHAR(50),
+    balance DECIMAL(10,2),
+    created DATE,
+    FOREIGN KEY (trackingNumber) REFERENCES shipments(tracking_number)
 );

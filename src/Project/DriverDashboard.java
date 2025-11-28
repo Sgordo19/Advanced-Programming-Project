@@ -4,39 +4,67 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Stack;
 
 public class DriverDashboard extends JFrame {
     private JTable routesTable, shipmentsTable;
     private DefaultTableModel routesModel, shipmentsModel;
     private JLabel lblVehicleInfo;
     private User driver;
+    private JButton btnLogout;
+    
+    // Navigation stack to track opened frames
+    private Stack<JFrame> frameStack = new Stack<>();
 
     public DriverDashboard(User driver) {
         this.driver = driver;
+        
+        // Push the dashboard itself onto the stack
+        frameStack.push(this);
 
-        setTitle("Driver Dashboard - " + driver.getFirstName());
-        setSize(900, 500);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        initializeComponents();
+        layoutComponents();
+        setWindowProperties();
+        loadDriverData();
 
+        setVisible(true);
+    }
+
+    private void initializeComponents() {
         // Vehicle info label
         lblVehicleInfo = new JLabel("Vehicle info will appear here");
-        add(lblVehicleInfo, BorderLayout.NORTH);
-
-        // Routes table
+        
+        // Tables
         routesModel = new DefaultTableModel(new String[]{"Route ID", "Route Name", "Start", "End"}, 0) {
-			private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1L;
 
-			@Override
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // routes table is read-only
             }
         };
         routesTable = new JTable(routesModel);
 
-        // Shipments table
         shipmentsModel = new DefaultTableModel(new String[]{"Tracking #", "Recipient Name", "Address", "Weight", "Status"}, 0);
         shipmentsTable = new JTable(shipmentsModel);
+
+        // Button
+        btnLogout = new JButton("Logout");
+    }
+
+    private void layoutComponents() {
+        setLayout(new BorderLayout());
+
+        // Top panel with vehicle info and buttons
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(lblVehicleInfo, BorderLayout.NORTH);
+        
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(btnLogout);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        add(topPanel, BorderLayout.NORTH);
 
         // Make status column a combo box
         JComboBox<String> statusCombo = new JComboBox<>();
@@ -63,9 +91,16 @@ public class DriverDashboard extends JFrame {
         splitPane.setResizeWeight(0.5);
         add(splitPane, BorderLayout.CENTER);
 
-        loadDriverData();
+        // Action listeners
+        btnLogout.addActionListener(e -> backToLogin());
+    }
 
-        setVisible(true);
+    private void setWindowProperties() {
+        setTitle("Driver Dashboard - " + driver.getFirstName());
+        setSize(900, 550); // Slightly increased height for buttons
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(true);
     }
 
     private void loadDriverData() {
@@ -105,5 +140,32 @@ public class DriverDashboard extends JFrame {
         } else {
             lblVehicleInfo.setText("No vehicle assigned.");
         }
+    }
+
+    
+    //Returns to login screen and closes all frames
+    private void backToLogin() {
+        // Close all frames in the stack
+        while (!frameStack.isEmpty()) {
+            JFrame frame = frameStack.pop();
+            frame.dispose();
+        }
+        new LoginView();
+    }
+    
+    //Method to add frames to the navigation stack from child components
+    public void addToFrameStack(JFrame frame) {
+        frameStack.push(frame);
+    }
+
+    //Method to refresh the dashboard data
+    public void refreshData() {
+        loadDriverData();
+    }
+
+    //Method to clear all data from tables
+    private void clearTables() {
+        routesModel.setRowCount(0);
+        shipmentsModel.setRowCount(0);
     }
 }
