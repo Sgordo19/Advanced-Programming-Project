@@ -1,0 +1,44 @@
+[INFO ] 2025-11-28 18:22:40.373 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: patwalker@gmail.com
+[INFO ] 2025-11-28 18:22:40.538 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: CUS-000007
+[INFO ] 2025-11-28 19:31:02.014 [AWT-EventQueue-0] dbFactories.UserDAO - Attempting to save user: ajanis@gmail.com
+[INFO ] 2025-11-28 19:31:02.052 [AWT-EventQueue-0] dbFactories.UserDAO - User saved: CUS-000008 | Rows affected: 1
+[INFO ] 2025-11-28 19:31:16.197 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: ajanis@gmail.com
+[INFO ] 2025-11-28 19:31:16.205 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: CUS-000008
+[INFO ] 2025-11-28 19:32:39.101 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Saving shipment: PKG-20251128-000002
+[INFO ] 2025-11-28 19:32:39.126 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Shipment saved. Rows affected: 1, Invoice rows affected: 1
+[INFO ] 2025-11-28 19:32:43.144 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetching shipments for customer: CUS-000008
+[INFO ] 2025-11-28 19:32:43.152 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetched 1 shipments for customer CUS-000008
+[INFO ] 2025-11-28 19:33:47.987 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: mattheww@gmail.com
+[INFO ] 2025-11-28 19:33:48.001 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: CLK-000005
+[INFO ] 2025-11-28 19:33:50.056 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Fetching all invoices from database
+[INFO ] 2025-11-28 19:33:50.063 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Fetched 2 invoices
+[INFO ] 2025-11-28 19:33:52.916 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Fetching invoice by invoiceNum=2
+[INFO ] 2025-11-28 19:33:52.924 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Invoice 2 fetched successfully
+[INFO ] 2025-11-28 19:34:04.345 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Updating invoice 2 with status=PARTIALLY PAID and balance=75.0
+[INFO ] 2025-11-28 19:34:04.356 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Invoice update result for invoiceNum=2: rowsAffected=1
+[INFO ] 2025-11-28 19:34:05.538 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Fetching all invoices from database
+[INFO ] 2025-11-28 19:34:05.545 [AWT-EventQueue-0] dbFactories.InvoiceDAO - Fetched 2 invoices
+[INFO ] 2025-11-28 19:35:02.417 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: davidc@gmail.com
+[INFO ] 2025-11-28 19:35:02.826 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: MNG-000006
+[INFO ] 2025-11-28 19:36:47.096 [AWT-EventQueue-0] controller.ReportService - Generating Shipment Report from 2025-11-28 to 2025-11-28
+[INFO ] 2025-11-28 19:36:47.105 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetching shipments for date: 2025-11-28T00:00:00.000-0500
+[INFO ] 2025-11-28 19:36:47.134 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetched 2 shipments for date 2025-11-28T00:00:00.000-0500
+[INFO ] 2025-11-28 19:36:47.137 [AWT-EventQueue-0] controller.ReportService - Shipment Report generated with 2 entries
+[INFO ] 2025-11-28 20:03:59.964 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: davidc@gmail.com
+[INFO ] 2025-11-28 20:04:00.422 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: MNG-000006
+[INFO ] 2025-11-28 20:04:27.013 [AWT-EventQueue-0] controller.ReportService - Generating Shipment Report from 2025-11-28 to 2025-11-28
+[INFO ] 2025-11-28 20:04:27.022 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetching shipments for date: 2025-11-28T00:00:00.000-0500
+[INFO ] 2025-11-28 20:04:27.042 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetched 2 shipments for date 2025-11-28T00:00:00.000-0500
+[INFO ] 2025-11-28 20:04:27.043 [AWT-EventQueue-0] controller.ReportService - Shipment Report generated with 2 entries
+[INFO ] 2025-11-28 20:16:04.920 [AWT-EventQueue-0] dbFactories.UserDAO - Attempting to save user: Melissag@gmail.com
+[INFO ] 2025-11-28 20:16:04.936 [AWT-EventQueue-0] dbFactories.UserDAO - User saved: CUS-000009 | Rows affected: 1
+[INFO ] 2025-11-28 20:16:28.212 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: melissag@gmail.com
+[INFO ] 2025-11-28 20:16:28.217 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: CUS-000009
+[INFO ] 2025-11-28 20:18:02.664 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Saving shipment: PKG-20251128-000003
+[INFO ] 2025-11-28 20:18:02.677 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Shipment saved. Rows affected: 1, Invoice rows affected: 1
+[INFO ] 2025-11-28 20:23:02.246 [AWT-EventQueue-0] dbFactories.UserDAO - Login attempt for email: davidc@gmail.com
+[INFO ] 2025-11-28 20:23:02.435 [AWT-EventQueue-0] dbFactories.UserDAO - Login successful for user: MNG-000006
+[INFO ] 2025-11-28 20:23:34.568 [AWT-EventQueue-0] controller.ReportService - Generating Shipment Report from 2025-11-28 to 2025-11-28
+[INFO ] 2025-11-28 20:23:34.572 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetching shipments for date: 2025-11-28T00:00:00.000-0500
+[INFO ] 2025-11-28 20:23:34.582 [AWT-EventQueue-0] dbFactories.ShipmentDAO - Fetched 3 shipments for date 2025-11-28T00:00:00.000-0500
+[INFO ] 2025-11-28 20:23:34.584 [AWT-EventQueue-0] controller.ReportService - Shipment Report generated with 3 entries
